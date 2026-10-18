@@ -39,6 +39,11 @@
     .pending-count { text-align:right; flex:0 0 auto; }
     .pending-count strong { font-size:1.65rem; color:#ef9aa3; }
     .pending-count span { display:block; color:#bfa9b0; font-size:.62rem; }
+    .pending-card.currently-clear { border-color:#294a77; background:linear-gradient(135deg,#101d2f 0%,#111f34 100%); }
+    .pending-card.currently-clear .pending-icon { background:#183426; color:#8ee0b1; }
+    .pending-card.currently-clear .pending-count strong { color:#8ee0b1; }
+    .pending-card.currently-clear .pending-card-title { color:#d8e3ef; }
+    .pending-card.currently-clear p { color:#91b9a2; }
     .extra-panel { border-color:#294a77; background:linear-gradient(135deg,#101d2f 0%,#111f34 100%); }
     .extra-badge { padding:5px 8px; border-radius:999px; background:#1a3150; color:#9fbce0; font-size:.62rem; font-weight:800; white-space:nowrap; }
     .extra-help { margin:0; color:var(--muted); font-size:.72rem; line-height:1.45; }
@@ -67,10 +72,10 @@
       <div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>
     </section>
 
-    <section class="pending-card" aria-label="Períodos sin aporte">
+    <section class="pending-card" aria-label="Estado de aportes">
       <div class="pending-icon">!</div>
       <div>
-        <strong>2 períodos sin aporte</strong>
+        <strong class="pending-card-title">2 períodos sin aporte</strong>
         <p>Hay meses pendientes de recuperar. Cada período conserva el objetivo que correspondía en ese momento.</p>
       </div>
       <div class="pending-count"><strong>2</strong><span>pendientes</span></div>
