@@ -164,7 +164,13 @@
   };
   const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
   const formatDate = d => new Date(d+'T12:00:00').toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'}).replace(/^./,m=>m.toUpperCase());
-  const today = () => new Date().toISOString().slice(0,10);
+  const localToday = () => {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,'0');
+    const day = String(d.getDate()).padStart(2,'0');
+    return `${y}-${m}-${day}`;
+  };
 
   function refreshConversion(amountId,cclId,outputId){
     const amount=parseMoney(document.getElementById(amountId).value);
@@ -176,7 +182,7 @@
     const data = load();
     const monthly = data.filter(x=>x.type==='monthly');
     const extra = data.filter(x=>x.type==='extra');
-    const currentMonth = new Date().toISOString().slice(0,7);
+    const currentMonth = localToday().slice(0,7);
     const currentMonthly = monthly.filter(x=>x.date.slice(0,7)===currentMonth);
     const currentUsd = currentMonthly.reduce((s,x)=>s+x.ars/x.ccl,0);
     const fulfillment = currentUsd/TARGET*100;
@@ -232,12 +238,12 @@
     data.push({date,type:'extra',ars:amount,ccl,reason}); save(data); render();
     document.getElementById('extra-status').textContent='Aporte extra registrado. No modifica el cumplimiento mensual.';
     document.getElementById('extra-amount').value=''; document.getElementById('extra-reason').value='';
-    document.getElementById('extra-date').value=today(); document.getElementById('extra-ccl').value=DEFAULT_CCL.toFixed(2).replace('.',',');
+    document.getElementById('extra-date').value=localToday(); document.getElementById('extra-ccl').value=DEFAULT_CCL.toFixed(2).replace('.',',');
     refreshConversion('extra-amount','extra-ccl','extra-usd');
   });
 
-  document.getElementById('monthly-date').value=today();
-  document.getElementById('extra-date').value=today();
+  document.getElementById('monthly-date').value=localToday();
+  document.getElementById('extra-date').value=localToday();
   document.getElementById('monthly-ccl').value=DEFAULT_CCL.toFixed(2).replace('.',',');
   document.getElementById('extra-ccl').value=DEFAULT_CCL.toFixed(2).replace('.',',');
   refreshConversion('amount','monthly-ccl','monthly-usd');
