@@ -16,13 +16,15 @@
     .fulfillment span { color:var(--muted); font-size:.7rem; }
     .input-panel { display:grid; gap:16px; }
     .field-label { display:block; margin-bottom:7px; color:#a4b5ce; font-size:.7rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
-    .amount-input { width:100%; padding:16px; border:1px solid #31517b; border-radius:13px; outline:none; background:#0d1928; color:var(--text); font-size:1.35rem; font-weight:750; box-sizing:border-box; }
-    .amount-input:focus { border-color:var(--accent); }
+    .amount-input,.data-input { width:100%; padding:16px; border:1px solid #31517b; border-radius:13px; outline:none; background:#0d1928; color:var(--text); font-size:1.35rem; font-weight:750; box-sizing:border-box; }
+    .data-input { font-size:1rem; font-weight:650; }
+    .amount-input:focus,.data-input:focus { border-color:var(--accent); }
     .conversion-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
     .conversion-card { padding:13px; border:1px solid #213650; border-radius:13px; background:var(--surface-2); }
-    .conversion-card span { display:block; color:var(--muted); font-size:.68rem; margin-bottom:5px; }
+    .conversion-card span { display:block; color:var(--muted); font-size:.68rem; margin-bottom:7px; }
     .conversion-card strong { font-size:1rem; }
     .conversion-card.highlight { border-color:#315b96; background:#12253e; }
+    .conversion-card input { width:100%; box-sizing:border-box; }
     .history-list { display:grid; gap:10px; }
     .history-row { display:grid; grid-template-columns:1fr auto auto; gap:14px; align-items:center; padding:14px; border:1px solid #213650; border-radius:14px; background:var(--surface-2); }
     .history-main strong { display:block; font-size:.9rem; }
@@ -84,8 +86,12 @@
     <section class="panel input-panel">
       <div class="panel-heading" style="margin-bottom:0"><div><p class="section-label">NUEVO APORTE</p><h2>Cargar dinero en pesos</h2></div><span class="status neutral">Sin guardar</span></div>
       <div><label class="field-label" for="amount">Importe del aporte</label><input id="amount" class="amount-input" type="text" inputmode="decimal" value="$ 60.000,00" aria-label="Importe del aporte en pesos"></div>
-      <div class="conversion-grid"><div class="conversion-card"><span>CCL del día</span><strong>$1.676,00</strong></div><div class="conversion-card highlight"><span>Equivalente USD</span><strong id="monthly-usd">USD 35,80</strong></div><div class="conversion-card"><span>Fecha</span><strong>18/10/2026</strong></div></div>
-      <div class="info-box">El aporte se registra en pesos y el CCL de la fecha queda guardado como referencia histórica. Ese valor no se recalcula después.</div>
+      <div class="conversion-grid">
+        <div class="conversion-card"><span>Fecha del aporte</span><input id="monthly-date" class="data-input" type="date" value="2026-10-18" aria-label="Fecha del aporte mensual"></div>
+        <div class="conversion-card"><span>CCL utilizado</span><input id="monthly-ccl" class="data-input" type="text" inputmode="decimal" value="1676,00" aria-label="CCL utilizado para el aporte mensual"></div>
+        <div class="conversion-card highlight"><span>Equivalente USD</span><strong id="monthly-usd">USD 35,80</strong></div>
+      </div>
+      <div class="info-box">La fecha y el CCL son editables para poder cargar aportes históricos. El CCL utilizado queda guardado junto al aporte y no se recalcula después.</div>
       <button id="register-monthly" class="secondary-button" type="button" style="width:100%;padding:12px">Registrar aporte</button>
       <div id="monthly-status" class="test-status" aria-live="polite"></div>
     </section>
@@ -94,7 +100,13 @@
       <div class="panel-heading" style="margin-bottom:0"><div><p class="section-label">CAPITAL ADICIONAL</p><h2>Aporte extra</h2></div><span class="extra-badge">NO CUENTA COMO MES</span></div>
       <p class="extra-help">Registrá dinero adicional al aporte mensual. Puede ser un aguinaldo, un ingreso extraordinario o cualquier capital que quieras sumar a la estrategia.</p>
       <div><label class="field-label" for="extra-amount">Importe en pesos</label><input id="extra-amount" class="amount-input" type="text" inputmode="decimal" placeholder="$ 0,00" aria-label="Importe del aporte extra en pesos"></div>
-      <div><label class="field-label" for="extra-reason">Motivo · opcional</label><input id="extra-reason" class="extra-reason" type="text" placeholder="Ej.: Aguinaldo" aria-label="Motivo del aporte extra en pesos"></div>
+      <div class="conversion-grid">
+        <div class="conversion-card"><span>Fecha del aporte</span><input id="extra-date" class="data-input" type="date" value="2026-10-18" aria-label="Fecha del aporte extra"></div>
+        <div class="conversion-card"><span>CCL utilizado</span><input id="extra-ccl" class="data-input" type="text" inputmode="decimal" value="1676,00" aria-label="CCL utilizado para el aporte extra"></div>
+        <div class="conversion-card highlight"><span>Equivalente USD</span><strong id="extra-usd">USD 0,00</strong></div>
+      </div>
+      <div><label class="field-label" for="extra-reason">Motivo · opcional</label><input id="extra-reason" class="extra-reason" type="text" placeholder="Ej.: Aguinaldo" aria-label="Motivo del aporte extra"></div>
+      <div class="info-box">El aporte extra también conserva su fecha y CCL histórico. No modifica el cumplimiento del aporte mensual.</div>
       <button id="register-extra" class="secondary-button" type="button" style="width:100%;padding:12px">Registrar aporte extra</button>
       <div id="extra-status" class="test-status" aria-live="polite"></div>
     </section>
@@ -107,12 +119,7 @@
 
     <section class="panel">
       <div class="panel-heading"><div><p class="section-label">HISTORIAL</p><h2>Últimos aportes</h2></div></div>
-      <div id="history-list" class="history-list">
-        <div class="history-row"><div class="history-main"><strong>Octubre 2026</strong><span>$60.000 · CCL $1.676 · Aporte mensual</span></div><div class="history-usd"><strong>USD 35,80</strong><span>102,3% objetivo</span></div><span class="history-status">Mensual</span></div>
-        <div class="history-row"><div class="history-main"><strong>Septiembre 2026</strong><span>$60.000 · CCL histórico · Aporte mensual</span></div><div class="history-usd"><strong>USD 36,00</strong><span>102,9% objetivo</span></div><span class="history-status">Mensual</span></div>
-        <div class="history-row"><div class="history-main"><strong>Agosto 2026</strong><span>$60.000 · CCL histórico · Aporte mensual</span></div><div class="history-usd"><strong>USD 37,10</strong><span>106,0% objetivo</span></div><span class="history-status">Mensual</span></div>
-        <div class="history-row"><div class="history-main"><strong>Julio 2026</strong><span>$200.000 · CCL histórico · Aguinaldo</span></div><div class="history-usd"><strong>USD 119,33</strong><span>Capital adicional</span></div><span class="history-status extra">Extra</span></div>
-      </div>
+      <div id="history-list" class="history-list"></div>
     </section>
 
     <footer><p>CARTERA 20 · Aportar primero. Decidir después.</p></footer>
@@ -123,8 +130,7 @@
 (() => {
   const KEY = 'cartera20_aportes_prueba_v1';
   const TARGET = 35;
-  const CCL = 1676;
-  const month = '2026-10';
+  const DEFAULT_CCL = 1676;
   const seed = [
     {date:'2026-10-18', type:'monthly', ars:60000, ccl:1676, reason:''},
     {date:'2026-09-18', type:'monthly', ars:60000, ccl:1666.67, reason:''},
@@ -142,15 +148,29 @@
     const n = Number(cleaned);
     return Number.isFinite(n) ? n : 0;
   };
+  const parseCcl = value => {
+    const cleaned = String(value).replace(/[^0-9,.-]/g,'').replace(/\./g,'').replace(',','.');
+    const n = Number(cleaned);
+    return Number.isFinite(n) && n > 0 ? n : 0;
+  };
   const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
   const formatDate = d => new Date(d+'T12:00:00').toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'}).replace(/^./,m=>m.toUpperCase());
+  const today = () => new Date().toISOString().slice(0,10);
+
+  function refreshConversion(amountId,cclId,outputId){
+    const amount=parseMoney(document.getElementById(amountId).value);
+    const ccl=parseCcl(document.getElementById(cclId).value);
+    document.getElementById(outputId).textContent=usd(ccl?amount/ccl:0);
+  }
+
   function render(){
     const data = load();
     const monthly = data.filter(x=>x.type==='monthly');
     const extra = data.filter(x=>x.type==='extra');
-    const current = monthly.find(x=>x.date.slice(0,7)===month);
-    const currentUsd = current ? current.ars/current.ccl : 0;
-    const fulfillment = currentUsd ? currentUsd/TARGET*100 : 0;
+    const currentMonth = new Date().toISOString().slice(0,7);
+    const currentMonthly = monthly.filter(x=>x.date.slice(0,7)===currentMonth);
+    const currentUsd = currentMonthly.reduce((s,x)=>s+x.ars/x.ccl,0);
+    const fulfillment = currentUsd/TARGET*100;
     document.getElementById('fulfillment').textContent = fulfillment.toFixed(1).replace('.',',') + '%';
     document.getElementById('progress').style.width = Math.min(100,fulfillment)+'%';
     const totalMonthlyUsd = monthly.reduce((s,x)=>s+x.ars/x.ccl,0);
@@ -162,8 +182,8 @@
     document.getElementById('sum-monthly-avg').textContent=usd(monthly.length?totalMonthlyUsd/monthly.length:0);
     document.getElementById('sum-extra-usd').textContent=usd(totalExtraUsd);
     document.getElementById('sum-extra-count').textContent=extra.length;
-    const expected = ['2026-10','2026-09','2026-08','2026-07','2026-06','2026-05'];
-    const pending = expected.filter(m => !monthly.some(x=>x.date.slice(0,7)===m)).length;
+    const expected=['2026-10','2026-09','2026-08','2026-07','2026-06','2026-05'];
+    const pending=expected.filter(m=>!monthly.some(x=>x.date.slice(0,7)===m)).length;
     const card=document.getElementById('pending-card');
     card.classList.toggle('currently-clear',pending===0);
     document.getElementById('pending-title').textContent=pending?`${pending} períodos sin aporte`:'Los aportes están al día. ¡Continúa así!';
@@ -175,24 +195,44 @@
       return `<div class="history-row"><div class="history-main"><strong>${formatDate(x.date)}</strong><span>${ars(x.ars)} · CCL ${ars(x.ccl)} · ${isExtra?(esc(x.reason||'Aporte extra')):'Aporte mensual'}</span></div><div class="history-usd"><strong>${usd(u)}</strong><span>${isExtra?'Capital adicional':(u/TARGET*100).toFixed(1).replace('.',',')+'% objetivo'}</span></div><span class="history-status ${isExtra?'extra':''}">${isExtra?'Extra':'Mensual'}</span></div>`;
     }).join('');
   }
+
+  document.getElementById('amount').addEventListener('input',()=>refreshConversion('amount','monthly-ccl','monthly-usd'));
+  document.getElementById('monthly-ccl').addEventListener('input',()=>refreshConversion('amount','monthly-ccl','monthly-usd'));
+  document.getElementById('extra-amount').addEventListener('input',()=>refreshConversion('extra-amount','extra-ccl','extra-usd'));
+  document.getElementById('extra-ccl').addEventListener('input',()=>refreshConversion('extra-amount','extra-ccl','extra-usd'));
+
   document.getElementById('register-monthly').addEventListener('click',()=>{
     const amount=parseMoney(document.getElementById('amount').value);
+    const ccl=parseCcl(document.getElementById('monthly-ccl').value);
+    const date=document.getElementById('monthly-date').value;
     if(amount<=0){document.getElementById('monthly-status').textContent='Ingresá un importe válido.';return;}
-    const data=load(); const date=new Date().toISOString().slice(0,10);
-    data.push({date,type:'monthly',ars:amount,ccl:CCL,reason:''}); save(data); render();
+    if(ccl<=0){document.getElementById('monthly-status').textContent='Ingresá un CCL válido.';return;}
+    if(!date){document.getElementById('monthly-status').textContent='Seleccioná una fecha.';return;}
+    const data=load(); data.push({date,type:'monthly',ars:amount,ccl,reason:''}); save(data); render();
     document.getElementById('monthly-status').textContent='Aporte mensual registrado en los datos de prueba.';
   });
+
   document.getElementById('register-extra').addEventListener('click',()=>{
     const amount=parseMoney(document.getElementById('extra-amount').value);
+    const ccl=parseCcl(document.getElementById('extra-ccl').value);
+    const date=document.getElementById('extra-date').value;
     if(amount<=0){document.getElementById('extra-status').textContent='Ingresá un importe válido.';return;}
-    const reason=document.getElementById('extra-reason').value.trim(); const data=load(); const date=new Date().toISOString().slice(0,10);
-    data.push({date,type:'extra',ars:amount,ccl:CCL,reason}); save(data); render();
+    if(ccl<=0){document.getElementById('extra-status').textContent='Ingresá un CCL válido.';return;}
+    if(!date){document.getElementById('extra-status').textContent='Seleccioná una fecha.';return;}
+    const reason=document.getElementById('extra-reason').value.trim(); const data=load();
+    data.push({date,type:'extra',ars:amount,ccl,reason}); save(data); render();
     document.getElementById('extra-status').textContent='Aporte extra registrado. No modifica el cumplimiento mensual.';
     document.getElementById('extra-amount').value=''; document.getElementById('extra-reason').value='';
+    document.getElementById('extra-date').value=today(); document.getElementById('extra-ccl').value=DEFAULT_CCL.toFixed(2).replace('.',',');
+    refreshConversion('extra-amount','extra-ccl','extra-usd');
   });
-  document.getElementById('amount').addEventListener('input',()=>{
-    const amount=parseMoney(document.getElementById('amount').value); document.getElementById('monthly-usd').textContent=usd(amount/CCL);
-  });
+
+  document.getElementById('monthly-date').value=today();
+  document.getElementById('extra-date').value=today();
+  document.getElementById('monthly-ccl').value=DEFAULT_CCL.toFixed(2).replace('.',',');
+  document.getElementById('extra-ccl').value=DEFAULT_CCL.toFixed(2).replace('.',',');
+  refreshConversion('amount','monthly-ccl','monthly-usd');
+  refreshConversion('extra-amount','extra-ccl','extra-usd');
   render();
 })();
 </script>
