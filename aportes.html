@@ -16,7 +16,7 @@
     .fulfillment span { color:var(--muted); font-size:.7rem; }
     .input-panel { display:grid; gap:16px; }
     .field-label { display:block; margin-bottom:7px; color:#a4b5ce; font-size:.7rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
-    .amount-input { width:100%; padding:16px; border:1px solid #31517b; border-radius:13px; outline:none; background:#0d1928; color:var(--text); font-size:1.35rem; font-weight:750; }
+    .amount-input { width:100%; padding:16px; border:1px solid #31517b; border-radius:13px; outline:none; background:#0d1928; color:var(--text); font-size:1.35rem; font-weight:750; box-sizing:border-box; }
     .amount-input:focus { border-color:var(--accent); }
     .conversion-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
     .conversion-card { padding:13px; border:1px solid #213650; border-radius:13px; background:var(--surface-2); }
@@ -48,7 +48,7 @@
     .extra-panel { border-color:#294a77; background:linear-gradient(135deg,#101d2f 0%,#111f34 100%); }
     .extra-badge { padding:5px 8px; border-radius:999px; background:#1a3150; color:#9fbce0; font-size:.62rem; font-weight:800; white-space:nowrap; }
     .extra-help { margin:0; color:var(--muted); font-size:.72rem; line-height:1.45; }
-    .extra-reason { width:100%; padding:13px 14px; border:1px solid #29425f; border-radius:12px; outline:none; background:#0d1928; color:var(--text); font:inherit; font-size:.82rem; }
+    .extra-reason { width:100%; padding:13px 14px; border:1px solid #29425f; border-radius:12px; outline:none; background:#0d1928; color:var(--text); font:inherit; font-size:.82rem; box-sizing:border-box; }
     .extra-reason:focus { border-color:var(--accent); }
     .summary-block { display:grid; gap:10px; }
     .summary-block + .summary-block { margin-top:16px; padding-top:16px; border-top:1px solid #213650; }
@@ -60,81 +60,54 @@
     .summary-mini-card span { display:block; color:var(--muted); font-size:.66rem; margin-bottom:5px; }
     .summary-mini-card strong { display:block; font-size:1rem; }
     .summary-mini-card small { display:block; margin-top:3px; color:var(--muted); font-size:.62rem; }
+    .test-status { color:#9fbce0; font-size:.68rem; min-height:1em; }
     @media(max-width:480px){ .contribution-target{align-items:flex-start;flex-direction:column}.fulfillment{text-align:left}.conversion-grid{grid-template-columns:1fr 1fr}.conversion-card:last-child{grid-column:1/-1}.history-row{grid-template-columns:1fr auto}.history-status{grid-column:2;grid-row:1}.history-usd{grid-column:1;grid-row:2;text-align:left}.pending-card{align-items:flex-start}.pending-count{margin-left:auto}.summary-mini{grid-template-columns:1fr 1fr} }
   </style>
 </head>
 <body>
   <main class="app-shell">
     <header class="topbar">
-      <div>
-        <p class="eyebrow">CAPITAL APORTADO</p>
-        <h1>Mis <span>aportes</span></h1>
-        <p class="tagline">El hábito que sostiene la estrategia.</p>
-      </div>
+      <div><p class="eyebrow">CAPITAL APORTADO</p><h1>Mis <span>aportes</span></h1><p class="tagline">El hábito que sostiene la estrategia.</p></div>
       <a class="icon-button back-button" href="index.html" aria-label="Volver al inicio" title="Volver al inicio">←</a>
     </header>
 
     <section class="contribution-hero">
       <p class="section-label">OBJETIVO MENSUAL · DATOS DE PRUEBA</p>
-      <div class="contribution-target">
-        <div><div class="target-value">USD 35 <small>/ mes</small></div><p class="hero-subtitle">Objetivo inicial · +10% anual</p></div>
-        <div class="fulfillment"><strong>102,3%</strong><span>cumplimiento del mes</span></div>
-      </div>
-      <div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>
+      <div class="contribution-target"><div><div class="target-value">USD 35 <small>/ mes</small></div><p class="hero-subtitle">Objetivo inicial · +10% anual</p></div><div class="fulfillment"><strong id="fulfillment">102,3%</strong><span>cumplimiento del mes</span></div></div>
+      <div class="progress-track"><div id="progress" class="progress-fill" style="width:100%"></div></div>
     </section>
 
-    <section class="pending-card" aria-label="Estado de aportes">
-      <div class="pending-icon">!</div>
-      <div>
-        <strong class="pending-card-title">2 períodos sin aporte</strong>
-        <p>Hay meses pendientes de recuperar. Cada período conserva el objetivo que correspondía en ese momento.</p>
-      </div>
-      <div class="pending-count"><strong>2</strong><span>pendientes</span></div>
+    <section id="pending-card" class="pending-card" aria-label="Estado de aportes">
+      <div class="pending-icon">!</div><div><strong id="pending-title" class="pending-card-title">2 períodos sin aporte</strong><p id="pending-text">Hay meses pendientes de recuperar. Cada período conserva el objetivo que correspondía en ese momento.</p></div><div class="pending-count"><strong id="pending-count">2</strong><span id="pending-label">pendientes</span></div>
     </section>
 
     <section class="panel input-panel">
       <div class="panel-heading" style="margin-bottom:0"><div><p class="section-label">NUEVO APORTE</p><h2>Cargar dinero en pesos</h2></div><span class="status neutral">Sin guardar</span></div>
       <div><label class="field-label" for="amount">Importe del aporte</label><input id="amount" class="amount-input" type="text" inputmode="decimal" value="$ 60.000,00" aria-label="Importe del aporte en pesos"></div>
-      <div class="conversion-grid">
-        <div class="conversion-card"><span>CCL del día</span><strong>$1.676,00</strong></div>
-        <div class="conversion-card highlight"><span>Equivalente USD</span><strong>USD 35,80</strong></div>
-        <div class="conversion-card"><span>Fecha</span><strong>18/10/2026</strong></div>
-      </div>
+      <div class="conversion-grid"><div class="conversion-card"><span>CCL del día</span><strong>$1.676,00</strong></div><div class="conversion-card highlight"><span>Equivalente USD</span><strong id="monthly-usd">USD 35,80</strong></div><div class="conversion-card"><span>Fecha</span><strong>18/10/2026</strong></div></div>
       <div class="info-box">El aporte se registra en pesos y el CCL de la fecha queda guardado como referencia histórica. Ese valor no se recalcula después.</div>
-      <button class="secondary-button" type="button" style="width:100%;padding:12px">Registrar aporte</button>
+      <button id="register-monthly" class="secondary-button" type="button" style="width:100%;padding:12px">Registrar aporte</button>
+      <div id="monthly-status" class="test-status" aria-live="polite"></div>
     </section>
 
     <section class="panel extra-panel input-panel">
       <div class="panel-heading" style="margin-bottom:0"><div><p class="section-label">CAPITAL ADICIONAL</p><h2>Aporte extra</h2></div><span class="extra-badge">NO CUENTA COMO MES</span></div>
       <p class="extra-help">Registrá dinero adicional al aporte mensual. Puede ser un aguinaldo, un ingreso extraordinario o cualquier capital que quieras sumar a la estrategia.</p>
       <div><label class="field-label" for="extra-amount">Importe en pesos</label><input id="extra-amount" class="amount-input" type="text" inputmode="decimal" placeholder="$ 0,00" aria-label="Importe del aporte extra en pesos"></div>
-      <div><label class="field-label" for="extra-reason">Motivo · opcional</label><input id="extra-reason" class="extra-reason" type="text" placeholder="Ej.: Aguinaldo" aria-label="Motivo del aporte extra"></div>
-      <button class="secondary-button" type="button" style="width:100%;padding:12px">Registrar aporte extra</button>
+      <div><label class="field-label" for="extra-reason">Motivo · opcional</label><input id="extra-reason" class="extra-reason" type="text" placeholder="Ej.: Aguinaldo" aria-label="Motivo del aporte extra en pesos"></div>
+      <button id="register-extra" class="secondary-button" type="button" style="width:100%;padding:12px">Registrar aporte extra</button>
+      <div id="extra-status" class="test-status" aria-live="polite"></div>
     </section>
 
     <section class="panel">
       <div class="panel-heading"><div><p class="section-label">ACUMULADO</p><h2>Resumen de aportes</h2></div><span class="status neutral">Histórico</span></div>
-      <div class="summary-block">
-        <div class="summary-title"><strong>APORTES MENSUALES</strong><span>Disciplina del plan</span></div>
-        <div class="summary-mini">
-          <article class="summary-mini-card"><span>Capital aportado</span><strong>USD 439,93</strong><small>Equivalente histórico</small></article>
-          <article class="summary-mini-card"><span>En pesos</span><strong>$ 669.066</strong><small>Aportes mensuales</small></article>
-          <article class="summary-mini-card"><span>Períodos aportados</span><strong>10</strong><small>Registrados</small></article>
-          <article class="summary-mini-card"><span>Promedio</span><strong>USD 43,99</strong><small>Por período aportado</small></article>
-        </div>
-      </div>
-      <div class="summary-block">
-        <div class="summary-title"><strong>APORTES EXTRA</strong><span>Capital adicional</span></div>
-        <div class="summary-mini">
-          <article class="summary-mini-card"><span>Capital adicional</span><strong>USD 0,00</strong><small>No modifica el cumplimiento mensual</small></article>
-          <article class="summary-mini-card"><span>Cantidad</span><strong>0</strong><small>Aportes extraordinarios</small></article>
-        </div>
-      </div>
+      <div class="summary-block"><div class="summary-title"><strong>APORTES MENSUALES</strong><span>Disciplina del plan</span></div><div class="summary-mini"><article class="summary-mini-card"><span>Capital aportado</span><strong id="sum-monthly-usd">USD 439,93</strong><small>Equivalente histórico</small></article><article class="summary-mini-card"><span>En pesos</span><strong id="sum-monthly-ars">$ 669.066</strong><small>Aportes mensuales</small></article><article class="summary-mini-card"><span>Períodos aportados</span><strong id="sum-monthly-count">10</strong><small>Registrados</small></article><article class="summary-mini-card"><span>Promedio</span><strong id="sum-monthly-avg">USD 43,99</strong><small>Por período aportado</small></article></div></div>
+      <div class="summary-block"><div class="summary-title"><strong>APORTES EXTRA</strong><span>Capital adicional</span></div><div class="summary-mini"><article class="summary-mini-card"><span>Capital adicional</span><strong id="sum-extra-usd">USD 0,00</strong><small>No modifica el cumplimiento mensual</small></article><article class="summary-mini-card"><span>Cantidad</span><strong id="sum-extra-count">0</strong><small>Aportes extraordinarios</small></article></div></div>
     </section>
 
     <section class="panel">
       <div class="panel-heading"><div><p class="section-label">HISTORIAL</p><h2>Últimos aportes</h2></div></div>
-      <div class="history-list">
+      <div id="history-list" class="history-list">
         <div class="history-row"><div class="history-main"><strong>Octubre 2026</strong><span>$60.000 · CCL $1.676 · Aporte mensual</span></div><div class="history-usd"><strong>USD 35,80</strong><span>102,3% objetivo</span></div><span class="history-status">Mensual</span></div>
         <div class="history-row"><div class="history-main"><strong>Septiembre 2026</strong><span>$60.000 · CCL histórico · Aporte mensual</span></div><div class="history-usd"><strong>USD 36,00</strong><span>102,9% objetivo</span></div><span class="history-status">Mensual</span></div>
         <div class="history-row"><div class="history-main"><strong>Agosto 2026</strong><span>$60.000 · CCL histórico · Aporte mensual</span></div><div class="history-usd"><strong>USD 37,10</strong><span>106,0% objetivo</span></div><span class="history-status">Mensual</span></div>
@@ -144,13 +117,84 @@
 
     <footer><p>CARTERA 20 · Aportar primero. Decidir después.</p></footer>
   </main>
+  <nav class="bottom-nav" aria-label="Navegación principal"><a class="nav-item" href="index.html"><span class="nav-icon">⌂</span><span>Inicio</span></a><a class="nav-item" href="cartera.html"><span class="nav-icon">◔</span><span>Cartera</span></a><a class="nav-item active" href="aportes.html"><span class="nav-icon">▱</span><span>Aportes</span></a><a class="nav-item" href="#"><span class="nav-icon">◎</span><span>Decisión</span></a><a class="nav-item" href="#"><span class="nav-icon">•••</span><span>Más</span></a></nav>
 
-  <nav class="bottom-nav" aria-label="Navegación principal">
-    <a class="nav-item" href="index.html"><span class="nav-icon">⌂</span><span>Inicio</span></a>
-    <a class="nav-item" href="cartera.html"><span class="nav-icon">◔</span><span>Cartera</span></a>
-    <a class="nav-item active" href="aportes.html"><span class="nav-icon">▱</span><span>Aportes</span></a>
-    <a class="nav-item" href="#"><span class="nav-icon">◎</span><span>Decisión</span></a>
-    <a class="nav-item" href="#"><span class="nav-icon">•••</span><span>Más</span></a>
-  </nav>
+<script>
+(() => {
+  const KEY = 'cartera20_aportes_prueba_v1';
+  const TARGET = 35;
+  const CCL = 1676;
+  const month = '2026-10';
+  const seed = [
+    {date:'2026-10-18', type:'monthly', ars:60000, ccl:1676, reason:''},
+    {date:'2026-09-18', type:'monthly', ars:60000, ccl:1666.67, reason:''},
+    {date:'2026-08-18', type:'monthly', ars:60000, ccl:1617.25, reason:''},
+    {date:'2026-07-15', type:'extra', ars:200000, ccl:1674.22, reason:'Aguinaldo'},
+    {date:'2026-06-18', type:'monthly', ars:60000, ccl:1650, reason:''},
+    {date:'2026-05-18', type:'monthly', ars:60000, ccl:1620, reason:''}
+  ];
+  const load = () => JSON.parse(localStorage.getItem(KEY) || 'null') || seed;
+  const save = data => localStorage.setItem(KEY, JSON.stringify(data));
+  const ars = n => '$' + Math.round(n).toLocaleString('es-AR');
+  const usd = n => 'USD ' + n.toFixed(2).replace('.', ',');
+  const parseMoney = value => {
+    const cleaned = String(value).replace(/[^0-9,.-]/g,'').replace(/\./g,'').replace(',','.');
+    const n = Number(cleaned);
+    return Number.isFinite(n) ? n : 0;
+  };
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+  const formatDate = d => new Date(d+'T12:00:00').toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'}).replace(/^./,m=>m.toUpperCase());
+  function render(){
+    const data = load();
+    const monthly = data.filter(x=>x.type==='monthly');
+    const extra = data.filter(x=>x.type==='extra');
+    const current = monthly.find(x=>x.date.slice(0,7)===month);
+    const currentUsd = current ? current.ars/current.ccl : 0;
+    const fulfillment = currentUsd ? currentUsd/TARGET*100 : 0;
+    document.getElementById('fulfillment').textContent = fulfillment.toFixed(1).replace('.',',') + '%';
+    document.getElementById('progress').style.width = Math.min(100,fulfillment)+'%';
+    const totalMonthlyUsd = monthly.reduce((s,x)=>s+x.ars/x.ccl,0);
+    const totalMonthlyArs = monthly.reduce((s,x)=>s+x.ars,0);
+    const totalExtraUsd = extra.reduce((s,x)=>s+x.ars/x.ccl,0);
+    document.getElementById('sum-monthly-usd').textContent=usd(totalMonthlyUsd);
+    document.getElementById('sum-monthly-ars').textContent=ars(totalMonthlyArs);
+    document.getElementById('sum-monthly-count').textContent=monthly.length;
+    document.getElementById('sum-monthly-avg').textContent=usd(monthly.length?totalMonthlyUsd/monthly.length:0);
+    document.getElementById('sum-extra-usd').textContent=usd(totalExtraUsd);
+    document.getElementById('sum-extra-count').textContent=extra.length;
+    const expected = ['2026-10','2026-09','2026-08','2026-07','2026-06','2026-05'];
+    const pending = expected.filter(m => !monthly.some(x=>x.date.slice(0,7)===m)).length;
+    const card=document.getElementById('pending-card');
+    card.classList.toggle('currently-clear',pending===0);
+    document.getElementById('pending-title').textContent=pending?`${pending} períodos sin aporte`:'Los aportes están al día. ¡Continúa así!';
+    document.getElementById('pending-text').textContent=pending?'Hay meses pendientes de recuperar. Cada período conserva el objetivo que correspondía en ese momento.':'Todos los períodos evaluados tienen su aporte mensual registrado.';
+    document.getElementById('pending-count').textContent=pending;
+    document.getElementById('pending-label').textContent=pending?'pendientes':'al día';
+    document.getElementById('history-list').innerHTML=data.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(x=>{
+      const u=x.ars/x.ccl; const isExtra=x.type==='extra';
+      return `<div class="history-row"><div class="history-main"><strong>${formatDate(x.date)}</strong><span>${ars(x.ars)} · CCL ${ars(x.ccl)} · ${isExtra?(esc(x.reason||'Aporte extra')):'Aporte mensual'}</span></div><div class="history-usd"><strong>${usd(u)}</strong><span>${isExtra?'Capital adicional':(u/TARGET*100).toFixed(1).replace('.',',')+'% objetivo'}</span></div><span class="history-status ${isExtra?'extra':''}">${isExtra?'Extra':'Mensual'}</span></div>`;
+    }).join('');
+  }
+  document.getElementById('register-monthly').addEventListener('click',()=>{
+    const amount=parseMoney(document.getElementById('amount').value);
+    if(amount<=0){document.getElementById('monthly-status').textContent='Ingresá un importe válido.';return;}
+    const data=load(); const date=new Date().toISOString().slice(0,10);
+    data.push({date,type:'monthly',ars:amount,ccl:CCL,reason:''}); save(data); render();
+    document.getElementById('monthly-status').textContent='Aporte mensual registrado en los datos de prueba.';
+  });
+  document.getElementById('register-extra').addEventListener('click',()=>{
+    const amount=parseMoney(document.getElementById('extra-amount').value);
+    if(amount<=0){document.getElementById('extra-status').textContent='Ingresá un importe válido.';return;}
+    const reason=document.getElementById('extra-reason').value.trim(); const data=load(); const date=new Date().toISOString().slice(0,10);
+    data.push({date,type:'extra',ars:amount,ccl:CCL,reason}); save(data); render();
+    document.getElementById('extra-status').textContent='Aporte extra registrado. No modifica el cumplimiento mensual.';
+    document.getElementById('extra-amount').value=''; document.getElementById('extra-reason').value='';
+  });
+  document.getElementById('amount').addEventListener('input',()=>{
+    const amount=parseMoney(document.getElementById('amount').value); document.getElementById('monthly-usd').textContent=usd(amount/CCL);
+  });
+  render();
+})();
+</script>
 </body>
 </html>
