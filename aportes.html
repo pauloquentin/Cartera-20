@@ -31,6 +31,7 @@
     .history-usd strong { display:block; }
     .history-usd span { color:var(--muted); font-size:.65rem; }
     .history-status { padding:5px 8px; border-radius:999px; background:var(--success-soft); color:#9ce3bd; font-size:.65rem; font-weight:750; white-space:nowrap; }
+    .history-status.extra { background:#1a3150; color:#9fbce0; }
     .info-box { padding:14px; border:1px solid #213752; border-radius:14px; background:var(--surface-2); color:var(--muted); font-size:.75rem; line-height:1.5; }
     .pending-card { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px; margin-bottom:16px; border:1px solid #633d46; border-radius:18px; background:linear-gradient(135deg,#241a22 0%,#281d27 100%); }
     .pending-card .pending-icon { width:42px; height:42px; display:grid; place-items:center; flex:0 0 42px; border-radius:12px; background:#3a232b; color:#e9959f; font-size:1.15rem; }
@@ -49,7 +50,17 @@
     .extra-help { margin:0; color:var(--muted); font-size:.72rem; line-height:1.45; }
     .extra-reason { width:100%; padding:13px 14px; border:1px solid #29425f; border-radius:12px; outline:none; background:#0d1928; color:var(--text); font:inherit; font-size:.82rem; }
     .extra-reason:focus { border-color:var(--accent); }
-    @media(max-width:480px){ .contribution-target{align-items:flex-start;flex-direction:column}.fulfillment{text-align:left}.conversion-grid{grid-template-columns:1fr 1fr}.conversion-card:last-child{grid-column:1/-1}.history-row{grid-template-columns:1fr auto}.history-status{grid-column:2;grid-row:1}.history-usd{grid-column:1;grid-row:2;text-align:left}.pending-card{align-items:flex-start}.pending-count{margin-left:auto} }
+    .summary-block { display:grid; gap:10px; }
+    .summary-block + .summary-block { margin-top:16px; padding-top:16px; border-top:1px solid #213650; }
+    .summary-title { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .summary-title strong { font-size:.82rem; letter-spacing:.02em; }
+    .summary-title span { color:var(--muted); font-size:.68rem; }
+    .summary-mini { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+    .summary-mini-card { padding:13px; border:1px solid #213650; border-radius:13px; background:var(--surface-2); }
+    .summary-mini-card span { display:block; color:var(--muted); font-size:.66rem; margin-bottom:5px; }
+    .summary-mini-card strong { display:block; font-size:1rem; }
+    .summary-mini-card small { display:block; margin-top:3px; color:var(--muted); font-size:.62rem; }
+    @media(max-width:480px){ .contribution-target{align-items:flex-start;flex-direction:column}.fulfillment{text-align:left}.conversion-grid{grid-template-columns:1fr 1fr}.conversion-card:last-child{grid-column:1/-1}.history-row{grid-template-columns:1fr auto}.history-status{grid-column:2;grid-row:1}.history-usd{grid-column:1;grid-row:2;text-align:left}.pending-card{align-items:flex-start}.pending-count{margin-left:auto}.summary-mini{grid-template-columns:1fr 1fr} }
   </style>
 </head>
 <body>
@@ -103,20 +114,31 @@
 
     <section class="panel">
       <div class="panel-heading"><div><p class="section-label">ACUMULADO</p><h2>Resumen de aportes</h2></div><span class="status neutral">Histórico</span></div>
-      <div class="stats-grid" style="margin-bottom:0">
-        <article class="stat-card"><div class="stat-icon">▤</div><div><span>Total aportado</span><strong>USD 439,93</strong><small>Equivalente histórico</small></div></article>
-        <article class="stat-card"><div class="stat-icon">$</div><div><span>En pesos</span><strong>$ 669.066</strong><small>Aportes acumulados</small></div></article>
-        <article class="stat-card"><div class="stat-icon">◎</div><div><span>Aportes</span><strong>10</strong><small>Registrados</small></div></article>
-        <article class="stat-card"><div class="stat-icon">↗</div><div><span>Promedio</span><strong>USD 43,99</strong><small>Por aporte</small></div></article>
+      <div class="summary-block">
+        <div class="summary-title"><strong>APORTES MENSUALES</strong><span>Disciplina del plan</span></div>
+        <div class="summary-mini">
+          <article class="summary-mini-card"><span>Capital aportado</span><strong>USD 439,93</strong><small>Equivalente histórico</small></article>
+          <article class="summary-mini-card"><span>En pesos</span><strong>$ 669.066</strong><small>Aportes mensuales</small></article>
+          <article class="summary-mini-card"><span>Períodos aportados</span><strong>10</strong><small>Registrados</small></article>
+          <article class="summary-mini-card"><span>Promedio</span><strong>USD 43,99</strong><small>Por período aportado</small></article>
+        </div>
+      </div>
+      <div class="summary-block">
+        <div class="summary-title"><strong>APORTES EXTRA</strong><span>Capital adicional</span></div>
+        <div class="summary-mini">
+          <article class="summary-mini-card"><span>Capital adicional</span><strong>USD 0,00</strong><small>No modifica el cumplimiento mensual</small></article>
+          <article class="summary-mini-card"><span>Cantidad</span><strong>0</strong><small>Aportes extraordinarios</small></article>
+        </div>
       </div>
     </section>
 
     <section class="panel">
       <div class="panel-heading"><div><p class="section-label">HISTORIAL</p><h2>Últimos aportes</h2></div></div>
       <div class="history-list">
-        <div class="history-row"><div class="history-main"><strong>Octubre 2026</strong><span>$60.000 · CCL $1.676</span></div><div class="history-usd"><strong>USD 35,80</strong><span>102,3% objetivo</span></div><span class="history-status">Registrado</span></div>
-        <div class="history-row"><div class="history-main"><strong>Septiembre 2026</strong><span>$60.000 · CCL histórico</span></div><div class="history-usd"><strong>USD 36,00</strong><span>102,9% objetivo</span></div><span class="history-status">Registrado</span></div>
-        <div class="history-row"><div class="history-main"><strong>Agosto 2026</strong><span>$60.000 · CCL histórico</span></div><div class="history-usd"><strong>USD 37,10</strong><span>106,0% objetivo</span></div><span class="history-status">Registrado</span></div>
+        <div class="history-row"><div class="history-main"><strong>Octubre 2026</strong><span>$60.000 · CCL $1.676 · Aporte mensual</span></div><div class="history-usd"><strong>USD 35,80</strong><span>102,3% objetivo</span></div><span class="history-status">Mensual</span></div>
+        <div class="history-row"><div class="history-main"><strong>Septiembre 2026</strong><span>$60.000 · CCL histórico · Aporte mensual</span></div><div class="history-usd"><strong>USD 36,00</strong><span>102,9% objetivo</span></div><span class="history-status">Mensual</span></div>
+        <div class="history-row"><div class="history-main"><strong>Agosto 2026</strong><span>$60.000 · CCL histórico · Aporte mensual</span></div><div class="history-usd"><strong>USD 37,10</strong><span>106,0% objetivo</span></div><span class="history-status">Mensual</span></div>
+        <div class="history-row"><div class="history-main"><strong>Julio 2026</strong><span>$200.000 · CCL histórico · Aguinaldo</span></div><div class="history-usd"><strong>USD 119,33</strong><span>Capital adicional</span></div><span class="history-status extra">Extra</span></div>
       </div>
     </section>
 
