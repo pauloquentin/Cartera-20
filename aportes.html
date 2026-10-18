@@ -149,7 +149,16 @@
     return Number.isFinite(n) ? n : 0;
   };
   const parseCcl = value => {
-    const cleaned = String(value).replace(/[^0-9,.-]/g,'').replace(/\./g,'').replace(',','.');
+    let cleaned = String(value).trim().replace(/[^0-9,.-]/g,'');
+    if (cleaned.includes(',') && cleaned.includes('.')) {
+      if (cleaned.lastIndexOf(',') > cleaned.lastIndexOf('.')) {
+        cleaned = cleaned.replace(/\./g,'').replace(',','.');
+      } else {
+        cleaned = cleaned.replace(/,/g,'');
+      }
+    } else if (cleaned.includes(',')) {
+      cleaned = cleaned.replace(/\./g,'').replace(',','.');
+    }
     const n = Number(cleaned);
     return Number.isFinite(n) && n > 0 ? n : 0;
   };
