@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0a1320">
+  <title>CARTERA 20 · Cartera</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">CARTERA</p>
+        <h1>Mis <span>activos</span></h1>
+        <p class="tagline">La estrategia primero. El mercado después.</p>
+      </div>
+      <a class="icon-button back-button" href="index.html" aria-label="Volver al inicio" title="Volver al inicio">←</a>
+    </header>
+
+    <section class="portfolio-summary">
+      <div>
+        <p class="section-label">VALOR DE CARTERA</p>
+        <div class="portfolio-total">USD 0,00</div>
+        <p class="hero-subtitle">Valor de mercado · datos de prueba</p>
+      </div>
+      <div class="portfolio-mini-stat"><span>Activos</span><strong>5</strong></div>
+      <div class="portfolio-mini-stat"><span>Objetivo</span><strong>100%</strong></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div><p class="section-label">DISTRIBUCIÓN</p><h2>Posición actual</h2></div>
+        <span class="status neutral">Sin cotizaciones</span>
+      </div>
+      <div class="portfolio-list">
+        <article class="asset-card">
+          <div class="asset-head"><div class="ticker-badge">SPY</div><div class="asset-title"><strong>SPDR S&amp;P 500 ETF</strong><span>Objetivo 60% · banda 55–65%</span></div><span class="asset-status neutral">Sin datos</span></div>
+          <div class="asset-metrics"><div><span>Unidades</span><strong>23</strong></div><div><span>PPC</span><strong>$18.479,35</strong></div><div><span>Actual</span><strong>—</strong></div><div><span>Peso</span><strong>—</strong></div></div>
+          <div class="asset-progress"><div class="asset-progress-track"><div class="asset-progress-fill" style="width:0%"></div></div><span>Objetivo 60%</span></div>
+        </article>
+
+        <article class="asset-card">
+          <div class="asset-head"><div class="ticker-badge">BRKB</div><div class="asset-title"><strong>Berkshire Hathaway</strong><span>Objetivo 15% · banda 12–18%</span></div><span class="asset-status neutral">Sin datos</span></div>
+          <div class="asset-metrics"><div><span>Unidades</span><strong>3</strong></div><div><span>PPC</span><strong>$32.880,00</strong></div><div><span>Actual</span><strong>—</strong></div><div><span>Peso</span><strong>—</strong></div></div>
+          <div class="asset-progress"><div class="asset-progress-track"><div class="asset-progress-fill" style="width:0%"></div></div><span>Objetivo 15%</span></div>
+        </article>
+
+        <article class="asset-card">
+          <div class="asset-head"><div class="ticker-badge">VEA</div><div class="asset-title"><strong>Vanguard FTSE Developed Markets</strong><span>Objetivo 10% · banda 8–12%</span></div><span class="asset-status neutral">Sin datos</span></div>
+          <div class="asset-metrics"><div><span>Unidades</span><strong>8</strong></div><div><span>PPC</span><strong>$10.698,75</strong></div><div><span>Actual</span><strong>—</strong></div><div><span>Peso</span><strong>—</strong></div></div>
+          <div class="asset-progress"><div class="asset-progress-track"><div class="asset-progress-fill" style="width:0%"></div></div><span>Objetivo 10%</span></div>
+        </article>
+
+        <article class="asset-card">
+          <div class="asset-head"><div class="ticker-badge">O</div><div class="asset-title"><strong>Realty Income</strong><span>Objetivo 10% · banda 8–12%</span></div><span class="asset-status neutral">Sin datos</span></div>
+          <div class="asset-metrics"><div><span>Unidades</span><strong>11</strong></div><div><span>PPC</span><strong>$7.053,18</strong></div><div><span>Actual</span><strong>—</strong></div><div><span>Peso</span><strong>—</strong></div></div>
+          <div class="asset-progress"><div class="asset-progress-track"><div class="asset-progress-fill" style="width:0%"></div></div><span>Objetivo 10%</span></div>
+        </article>
+
+        <article class="asset-card">
+          <div class="asset-head"><div class="ticker-badge">SMH</div><div class="asset-title"><strong>VanEck Semiconductor ETF</strong><span>Objetivo 5% · banda 3–7%</span></div><span class="asset-status neutral">Sin datos</span></div>
+          <div class="asset-metrics"><div><span>Unidades</span><strong>3</strong></div><div><span>PPC</span><strong>$15.948,89</strong></div><div><span>Actual</span><strong>—</strong></div><div><span>Peso</span><strong>—</strong></div></div>
+          <div class="asset-progress"><div class="asset-progress-track"><div class="asset-progress-fill" style="width:0%"></div></div><span>Objetivo 5%</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel add-asset-panel">
+      <div class="add-asset-copy"><div class="small-plus">＋</div><div><strong>¿Agregar un activo en el futuro?</strong><p>La cartera está preparada para incorporar nuevos CEDEARs sin alterar el historial.</p></div></div>
+      <button class="secondary-button" type="button">Agregar activo</button>
+    </section>
+
+    <footer><p>CARTERA 20 · Construir el hábito, no predecir el mercado.</p></footer>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navegación principal">
+    <a class="nav-item" href="index.html"><span class="nav-icon">⌂</span><span>Inicio</span></a>
+    <a class="nav-item active" href="cartera.html"><span class="nav-icon">◔</span><span>Cartera</span></a>
+    <a class="nav-item" href="#"><span class="nav-icon">▱</span><span>Aportes</span></a>
+    <a class="nav-item" href="#"><span class="nav-icon">◎</span><span>Decisión</span></a>
+    <a class="nav-item" href="#"><span class="nav-icon">•••</span><span>Más</span></a>
+  </nav>
+</body>
+</html>
