@@ -40,6 +40,26 @@
       <article class="stat-card"><div class="stat-icon">↗</div><div><span>Rendimiento</span><strong>0,00%</strong><small>Desde el inicio</small></div></article>
     </section>
 
+    <section class="panel evolution-panel">
+      <div class="panel-heading">
+        <div><p class="section-label">EVOLUCIÓN</p><h2>El camino de la cartera</h2></div>
+        <span class="status neutral">Datos de prueba</span>
+      </div>
+      <div class="evolution-controls" aria-label="Período del gráfico">
+        <button type="button">1 año</button><button type="button">5 años</button><button type="button" class="active">10 años</button><button type="button">20 años</button>
+      </div>
+      <div class="chart-wrap">
+        <svg class="evolution-chart" viewBox="0 0 800 300" role="img" aria-label="Evolución ilustrativa de CARTERA 20 y benchmark S&P 500">
+          <line x1="55" y1="45" x2="770" y2="45" class="chart-grid"/><line x1="55" y1="110" x2="770" y2="110" class="chart-grid"/><line x1="55" y1="175" x2="770" y2="175" class="chart-grid"/><line x1="55" y1="240" x2="770" y2="240" class="chart-grid"/>
+          <polyline points="55,230 135,220 215,205 295,210 375,175 455,160 535,135 615,118 695,90 770,68" class="portfolio-line"/>
+          <polyline points="55,230 135,214 215,185 295,158 375,145 455,122 535,105 615,88 695,65 770,48" class="benchmark-line"/>
+          <circle cx="770" cy="68" r="5" class="portfolio-point"/><circle cx="770" cy="48" r="5" class="benchmark-point"/>
+        </svg>
+      </div>
+      <div class="chart-legend"><span><i class="legend-dot portfolio-dot"></i>CARTERA 20</span><span><i class="legend-dot benchmark-dot"></i>S&amp;P 500 · benchmark</span></div>
+      <p class="chart-note">El benchmark sirve como referencia para evaluar la efectividad de la estrategia, no como objetivo de superar al mercado.</p>
+    </section>
+
     <section class="panel">
       <div class="panel-heading"><div><p class="section-label">DISTRIBUCIÓN</p><h2>Cartera actual</h2></div><span class="status neutral">Sin datos</span></div>
       <div class="allocation-list">
