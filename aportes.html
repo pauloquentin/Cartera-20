@@ -32,7 +32,19 @@
     .history-usd span { color:var(--muted); font-size:.65rem; }
     .history-status { padding:5px 8px; border-radius:999px; background:var(--success-soft); color:#9ce3bd; font-size:.65rem; font-weight:750; white-space:nowrap; }
     .info-box { padding:14px; border:1px solid #213752; border-radius:14px; background:var(--surface-2); color:var(--muted); font-size:.75rem; line-height:1.5; }
-    @media(max-width:480px){ .contribution-target{align-items:flex-start;flex-direction:column;}.fulfillment{text-align:left}.conversion-grid{grid-template-columns:1fr 1fr}.conversion-card:last-child{grid-column:1/-1}.history-row{grid-template-columns:1fr auto}.history-status{grid-column:2;grid-row:1}.history-usd{grid-column:1;grid-row:2;text-align:left} }
+    .pending-card { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px; margin-bottom:16px; border:1px solid #633d46; border-radius:18px; background:linear-gradient(135deg,#241a22 0%,#281d27 100%); }
+    .pending-card .pending-icon { width:42px; height:42px; display:grid; place-items:center; flex:0 0 42px; border-radius:12px; background:#3a232b; color:#e9959f; font-size:1.15rem; }
+    .pending-card strong { display:block; font-size:1.05rem; }
+    .pending-card p { margin:4px 0 0; color:#bfa9b0; font-size:.72rem; line-height:1.45; }
+    .pending-count { text-align:right; flex:0 0 auto; }
+    .pending-count strong { font-size:1.65rem; color:#ef9aa3; }
+    .pending-count span { display:block; color:#bfa9b0; font-size:.62rem; }
+    .extra-panel { border-color:#294a77; background:linear-gradient(135deg,#101d2f 0%,#111f34 100%); }
+    .extra-badge { padding:5px 8px; border-radius:999px; background:#1a3150; color:#9fbce0; font-size:.62rem; font-weight:800; white-space:nowrap; }
+    .extra-help { margin:0; color:var(--muted); font-size:.72rem; line-height:1.45; }
+    .extra-reason { width:100%; padding:13px 14px; border:1px solid #29425f; border-radius:12px; outline:none; background:#0d1928; color:var(--text); font:inherit; font-size:.82rem; }
+    .extra-reason:focus { border-color:var(--accent); }
+    @media(max-width:480px){ .contribution-target{align-items:flex-start;flex-direction:column}.fulfillment{text-align:left}.conversion-grid{grid-template-columns:1fr 1fr}.conversion-card:last-child{grid-column:1/-1}.history-row{grid-template-columns:1fr auto}.history-status{grid-column:2;grid-row:1}.history-usd{grid-column:1;grid-row:2;text-align:left}.pending-card{align-items:flex-start}.pending-count{margin-left:auto} }
   </style>
 </head>
 <body>
@@ -55,6 +67,15 @@
       <div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>
     </section>
 
+    <section class="pending-card" aria-label="Períodos sin aporte">
+      <div class="pending-icon">!</div>
+      <div>
+        <strong>2 períodos sin aporte</strong>
+        <p>Hay meses pendientes de recuperar. Cada período conserva el objetivo que correspondía en ese momento.</p>
+      </div>
+      <div class="pending-count"><strong>2</strong><span>pendientes</span></div>
+    </section>
+
     <section class="panel input-panel">
       <div class="panel-heading" style="margin-bottom:0"><div><p class="section-label">NUEVO APORTE</p><h2>Cargar dinero en pesos</h2></div><span class="status neutral">Sin guardar</span></div>
       <div><label class="field-label" for="amount">Importe del aporte</label><input id="amount" class="amount-input" type="text" inputmode="decimal" value="$ 60.000,00" aria-label="Importe del aporte en pesos"></div>
@@ -65,6 +86,14 @@
       </div>
       <div class="info-box">El aporte se registra en pesos y el CCL de la fecha queda guardado como referencia histórica. Ese valor no se recalcula después.</div>
       <button class="secondary-button" type="button" style="width:100%;padding:12px">Registrar aporte</button>
+    </section>
+
+    <section class="panel extra-panel input-panel">
+      <div class="panel-heading" style="margin-bottom:0"><div><p class="section-label">CAPITAL ADICIONAL</p><h2>Aporte extra</h2></div><span class="extra-badge">NO CUENTA COMO MES</span></div>
+      <p class="extra-help">Registrá dinero adicional al aporte mensual. Puede ser un aguinaldo, un ingreso extraordinario o cualquier capital que quieras sumar a la estrategia.</p>
+      <div><label class="field-label" for="extra-amount">Importe en pesos</label><input id="extra-amount" class="amount-input" type="text" inputmode="decimal" placeholder="$ 0,00" aria-label="Importe del aporte extra en pesos"></div>
+      <div><label class="field-label" for="extra-reason">Motivo · opcional</label><input id="extra-reason" class="extra-reason" type="text" placeholder="Ej.: Aguinaldo" aria-label="Motivo del aporte extra"></div>
+      <button class="secondary-button" type="button" style="width:100%;padding:12px">Registrar aporte extra</button>
     </section>
 
     <section class="panel">
