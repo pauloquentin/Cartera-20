@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0a1320">
+  <title>CARTERA 20 · Aportes</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .contribution-hero { padding:24px; margin-bottom:16px; border:1px solid #294a77; border-radius:20px; background:linear-gradient(135deg,#101e31 0%,#10243e 100%); box-shadow:var(--shadow); }
+    .contribution-target { display:flex; align-items:end; justify-content:space-between; gap:18px; }
+    .target-value { font-size:clamp(2.3rem,7vw,3.6rem); line-height:.95; font-weight:760; letter-spacing:-.055em; }
+    .target-value small { font-size:.42em; font-weight:700; color:var(--muted); letter-spacing:0; }
+    .fulfillment { text-align:right; }
+    .fulfillment strong { display:block; font-size:1.25rem; color:var(--success); }
+    .fulfillment span { color:var(--muted); font-size:.7rem; }
+    .input-panel { display:grid; gap:16px; }
+    .field-label { display:block; margin-bottom:7px; color:#a4b5ce; font-size:.7rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+    .amount-input { width:100%; padding:16px; border:1px solid #31517b; border-radius:13px; outline:none; background:#0d1928; color:var(--text); font-size:1.35rem; font-weight:750; }
+    .amount-input:focus { border-color:var(--accent); }
+    .conversion-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+    .conversion-card { padding:13px; border:1px solid #213650; border-radius:13px; background:var(--surface-2); }
+    .conversion-card span { display:block; color:var(--muted); font-size:.68rem; margin-bottom:5px; }
+    .conversion-card strong { font-size:1rem; }
+    .conversion-card.highlight { border-color:#315b96; background:#12253e; }
+    .history-list { display:grid; gap:10px; }
+    .history-row { display:grid; grid-template-columns:1fr auto auto; gap:14px; align-items:center; padding:14px; border:1px solid #213650; border-radius:14px; background:var(--surface-2); }
+    .history-main strong { display:block; font-size:.9rem; }
+    .history-main span { display:block; margin-top:3px; color:var(--muted); font-size:.68rem; }
+    .history-usd { text-align:right; }
+    .history-usd strong { display:block; }
+    .history-usd span { color:var(--muted); font-size:.65rem; }
+    .history-status { padding:5px 8px; border-radius:999px; background:var(--success-soft); color:#9ce3bd; font-size:.65rem; font-weight:750; white-space:nowrap; }
+    .info-box { padding:14px; border:1px solid #213752; border-radius:14px; background:var(--surface-2); color:var(--muted); font-size:.75rem; line-height:1.5; }
+    @media(max-width:480px){ .contribution-target{align-items:flex-start;flex-direction:column;}.fulfillment{text-align:left}.conversion-grid{grid-template-columns:1fr 1fr}.conversion-card:last-child{grid-column:1/-1}.history-row{grid-template-columns:1fr auto}.history-status{grid-column:2;grid-row:1}.history-usd{grid-column:1;grid-row:2;text-align:left} }
+  </style>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">CAPITAL APORTADO</p>
+        <h1>Mis <span>aportes</span></h1>
+        <p class="tagline">El hábito que sostiene la estrategia.</p>
+      </div>
+      <a class="icon-button back-button" href="index.html" aria-label="Volver al inicio" title="Volver al inicio">←</a>
+    </header>
+
+    <section class="contribution-hero">
+      <p class="section-label">OBJETIVO MENSUAL · DATOS DE PRUEBA</p>
+      <div class="contribution-target">
+        <div><div class="target-value">USD 35 <small>/ mes</small></div><p class="hero-subtitle">Objetivo inicial · +10% anual</p></div>
+        <div class="fulfillment"><strong>102,3%</strong><span>cumplimiento del mes</span></div>
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>
+    </section>
+
+    <section class="panel input-panel">
+      <div class="panel-heading" style="margin-bottom:0"><div><p class="section-label">NUEVO APORTE</p><h2>Cargar dinero en pesos</h2></div><span class="status neutral">Sin guardar</span></div>
+      <div><label class="field-label" for="amount">Importe del aporte</label><input id="amount" class="amount-input" type="text" inputmode="decimal" value="$ 60.000,00" aria-label="Importe del aporte en pesos"></div>
+      <div class="conversion-grid">
+        <div class="conversion-card"><span>CCL del día</span><strong>$1.676,00</strong></div>
+        <div class="conversion-card highlight"><span>Equivalente USD</span><strong>USD 35,80</strong></div>
+        <div class="conversion-card"><span>Fecha</span><strong>18/10/2026</strong></div>
+      </div>
+      <div class="info-box">El aporte se registra en pesos y el CCL de la fecha queda guardado como referencia histórica. Ese valor no se recalcula después.</div>
+      <button class="secondary-button" type="button" style="width:100%;padding:12px">Registrar aporte</button>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading"><div><p class="section-label">ACUMULADO</p><h2>Resumen de aportes</h2></div><span class="status neutral">Histórico</span></div>
+      <div class="stats-grid" style="margin-bottom:0">
+        <article class="stat-card"><div class="stat-icon">▤</div><div><span>Total aportado</span><strong>USD 439,93</strong><small>Equivalente histórico</small></div></article>
+        <article class="stat-card"><div class="stat-icon">$</div><div><span>En pesos</span><strong>$ 669.066</strong><small>Aportes acumulados</small></div></article>
+        <article class="stat-card"><div class="stat-icon">◎</div><div><span>Aportes</span><strong>10</strong><small>Registrados</small></div></article>
+        <article class="stat-card"><div class="stat-icon">↗</div><div><span>Promedio</span><strong>USD 43,99</strong><small>Por aporte</small></div></article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading"><div><p class="section-label">HISTORIAL</p><h2>Últimos aportes</h2></div></div>
+      <div class="history-list">
+        <div class="history-row"><div class="history-main"><strong>Octubre 2026</strong><span>$60.000 · CCL $1.676</span></div><div class="history-usd"><strong>USD 35,80</strong><span>102,3% objetivo</span></div><span class="history-status">Registrado</span></div>
+        <div class="history-row"><div class="history-main"><strong>Septiembre 2026</strong><span>$60.000 · CCL histórico</span></div><div class="history-usd"><strong>USD 36,00</strong><span>102,9% objetivo</span></div><span class="history-status">Registrado</span></div>
+        <div class="history-row"><div class="history-main"><strong>Agosto 2026</strong><span>$60.000 · CCL histórico</span></div><div class="history-usd"><strong>USD 37,10</strong><span>106,0% objetivo</span></div><span class="history-status">Registrado</span></div>
+      </div>
+    </section>
+
+    <footer><p>CARTERA 20 · Aportar primero. Decidir después.</p></footer>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navegación principal">
+    <a class="nav-item" href="index.html"><span class="nav-icon">⌂</span><span>Inicio</span></a>
+    <a class="nav-item" href="cartera.html"><span class="nav-icon">◔</span><span>Cartera</span></a>
+    <a class="nav-item active" href="aportes.html"><span class="nav-icon">▱</span><span>Aportes</span></a>
+    <a class="nav-item" href="#"><span class="nav-icon">◎</span><span>Decisión</span></a>
+    <a class="nav-item" href="#"><span class="nav-icon">•••</span><span>Más</span></a>
+  </nav>
+</body>
+</html>
