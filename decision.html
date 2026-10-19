@@ -20,27 +20,87 @@
   <header class="topbar"><div><p class="eyebrow">ANÁLISIS DE CARTERA</p><h1>La <span>decisión</span></h1><p class="tagline">La estrategia analiza. Vos decidís.</p></div><a class="icon-button back-button" href="index.html" aria-label="Volver al inicio" title="Volver al inicio">←</a></header>
 
   <section class="decision-hero">
-    <div class="decision-hero-grid"><div><p class="decision-kicker">PRÓXIMO APORTE · DATOS DE PRUEBA</p><h2 class="decision-title">¿Dónde aportar este mes?</h2><p class="decision-sub">El ranking combina necesidad de cartera, RSI y valoración. La asignación estratégica tiene prioridad.</p></div><div class="decision-amount"><strong>USD 35</strong><span>aporte objetivo</span></div></div>
+    <div class="decision-hero-grid"><div><p class="decision-kicker">PRÓXIMO APORTE · OBJETIVO DEL PLAN</p><h2 class="decision-title">¿Dónde aportar este mes?</h2><p class="decision-sub">El ranking combina necesidad de cartera, RSI y valoración. La asignación estratégica tiene prioridad.</p></div><div class="decision-amount"><strong id="decision-target">USD 35</strong><span>aporte objetivo</span></div></div>
     <div class="decision-note">Este análisis no intenta predecir el mercado. Busca orientar el próximo aporte sin alterar la estrategia ni convertir la cartera en una herramienta de trading.</div>
   </section>
 
   <section class="panel">
     <div class="panel-heading"><div><p class="section-label">RANKING</p><h2>Prioridad de aporte</h2></div><span class="status neutral">Datos de prueba</span></div>
-    <div class="ranking">
-      <article class="asset-decision"><div class="asset-top"><div class="asset-name"><strong>SPY</strong><span>S&amp;P 500 · Objetivo 60%</span><span class="priority high">Prioridad alta</span></div><div class="score"><strong>84</strong><span>/ 100</span></div></div><div class="score-track"><div class="score-fill" style="width:84%"></div></div><div class="score-breakdown"><div class="score-part"><span>Cartera</span><strong>52 / 60</strong></div><div class="score-part"><span>RSI</span><strong>14 / 20</strong></div><div class="score-part"><span>Valoración</span><strong>18 / 20</strong></div></div><p class="reason"><b>Por qué:</b> está por debajo de su peso objetivo y mantiene una combinación favorable entre necesidad de cartera y valoración.</p></article>
-      <article class="asset-decision"><div class="asset-top"><div class="asset-name"><strong>BRKB</strong><span>Berkshire Hathaway · Objetivo 15%</span><span class="priority">Buena oportunidad</span></div><div class="score"><strong>67</strong><span>/ 100</span></div></div><div class="score-track"><div class="score-fill" style="width:67%"></div></div><div class="score-breakdown"><div class="score-part"><span>Cartera</span><strong>39 / 60</strong></div><div class="score-part"><span>RSI</span><strong>13 / 20</strong></div><div class="score-part"><span>Valoración</span><strong>15 / 20</strong></div></div><p class="reason"><b>Por qué:</b> presenta necesidad de asignación y una señal complementaria razonable.</p></article>
-      <article class="asset-decision"><div class="asset-top"><div class="asset-name"><strong>O</strong><span>Realty Income · Objetivo 10%</span><span class="priority">Prioridad media</span></div><div class="score"><strong>52</strong><span>/ 100</span></div></div><div class="score-track"><div class="score-fill" style="width:52%"></div></div><div class="score-breakdown"><div class="score-part"><span>Cartera</span><strong>31 / 60</strong></div><div class="score-part"><span>RSI</span><strong>11 / 20</strong></div><div class="score-part"><span>Valoración</span><strong>10 / 20</strong></div></div><p class="reason"><b>Por qué:</b> mantiene una necesidad moderada dentro de la distribución objetivo.</p></article>
-      <article class="asset-decision"><div class="asset-top"><div class="asset-name"><strong>VEA</strong><span>Mercados desarrollados · Objetivo 10%</span><span class="priority low">Baja prioridad</span></div><div class="score"><strong>41</strong><span>/ 100</span></div></div><div class="score-track"><div class="score-fill" style="width:41%"></div></div><div class="score-breakdown"><div class="score-part"><span>Cartera</span><strong>24 / 60</strong></div><div class="score-part"><span>RSI</span><strong>9 / 20</strong></div><div class="score-part"><span>Valoración</span><strong>8 / 20</strong></div></div><p class="reason"><b>Por qué:</b> la necesidad actual es menor y las señales secundarias no elevan su prioridad.</p></article>
-      <article class="asset-decision"><div class="asset-top"><div class="asset-name"><strong>SMH</strong><span>Semiconductores · Objetivo 5%</span><span class="priority low">No priorizar</span></div><div class="score"><strong>18</strong><span>/ 100</span></div></div><div class="score-track"><div class="score-fill" style="width:18%"></div></div><div class="score-breakdown"><div class="score-part"><span>Cartera</span><strong>7 / 60</strong></div><div class="score-part"><span>RSI</span><strong>3 / 20</strong></div><div class="score-part"><span>Valoración</span><strong>8 / 20</strong></div></div><p class="reason"><b>Por qué:</b> aunque pueda presentar oportunidades puntuales, hoy no es prioritario dentro de la distribución estratégica.</p></article>
-    </div>
+    <div id="ranking" class="ranking"></div>
   </section>
 
-  <section class="panel recommendation"><div class="panel-heading"><div><p class="section-label">RECOMENDACIÓN</p><h2>El próximo aporte</h2></div></div><div class="rec-main"><div><div class="rec-label">Mayor prioridad</div><div class="rec-ticker">SPY</div><p class="rec-copy">Es el activo con mayor prioridad para el próximo aporte según el análisis de prueba.</p></div><div class="rec-amount">USD 35<span>aporte objetivo</span></div></div></section>
+  <section class="panel recommendation"><div class="panel-heading"><div><p class="section-label">RECOMENDACIÓN</p><h2>El próximo aporte</h2></div></div><div class="rec-main"><div><div class="rec-label">Mayor prioridad</div><div id="rec-ticker" class="rec-ticker">SPY</div><p id="rec-copy" class="rec-copy">Es el activo con mayor prioridad para el próximo aporte según el análisis de prueba.</p></div><div id="rec-amount" class="rec-amount">USD 35<span>aporte objetivo</span></div></div></section>
 
   <section class="panel"><div class="strategy-note"><strong>Recordatorio de estrategia:</strong> si un activo supera su banda superior, no se prioriza una nueva compra aunque su RSI sea atractivo. El objetivo es rebalancear principalmente mediante nuevos aportes, no mediante ventas.</div></section>
 
   <footer><p>CARTERA 20 · Aportar primero. Decidir después.</p></footer>
 </main>
 <nav class="bottom-nav" aria-label="Navegación principal"><a class="nav-item" href="index.html"><span class="nav-icon">⌂</span><span>Inicio</span></a><a class="nav-item" href="cartera.html"><span class="nav-icon">◔</span><span>Cartera</span></a><a class="nav-item" href="aportes.html"><span class="nav-icon">▱</span><span>Aportes</span></a><a class="nav-item active" href="decision.html"><span class="nav-icon">◎</span><span>Decisión</span></a><a class="nav-item" href="#"><span class="nav-icon">•••</span><span>Más</span></a></nav>
+
+<script>
+(() => {
+  const TARGET = 35;
+  const STORAGE_KEY = 'cartera20_aportes_prueba_v1';
+
+  // Datos de prueba: en la próxima etapa estos valores vendrán de Cartera + mercado.
+  // La estructura ya respeta la regla estratégica: la asignación manda sobre RSI y valoración.
+  const assets = [
+    {ticker:'SPY', name:'S&P 500', target:60, lower:55, upper:65, weight:52, rsi:55, valuation:18, reason:'está por debajo de su peso objetivo y mantiene una combinación favorable entre necesidad de cartera y valoración.'},
+    {ticker:'BRKB', name:'Berkshire Hathaway', target:15, lower:12, upper:18, weight:10, rsi:13, valuation:15, reason:'presenta necesidad de asignación y una señal complementaria razonable.'},
+    {ticker:'O', name:'Realty Income', target:10, lower:8, upper:12, weight:8, rsi:11, valuation:10, reason:'mantiene una necesidad moderada dentro de la distribución objetivo.'},
+    {ticker:'VEA', name:'Mercados desarrollados', target:10, lower:8, upper:12, weight:14, rsi:9, valuation:8, reason:'está por encima de su banda superior, por lo que no se prioriza con nuevos aportes.'},
+    {ticker:'SMH', name:'Semiconductores', target:5, lower:3, upper:7, weight:16, rsi:3, valuation:8, reason:'está por encima de su banda superior y no es prioritario dentro de la distribución estratégica.'}
+  ];
+
+  const portfolioScore = asset => {
+    if (asset.weight > asset.upper) return 0;
+    if (asset.weight < asset.lower) {
+      const deficit = Math.min(asset.target - asset.weight, asset.target);
+      return Math.max(0, Math.min(60, Math.round(30 + deficit * 2.5)));
+    }
+    const distance = Math.abs(asset.target - asset.weight);
+    return Math.max(5, Math.min(45, Math.round(30 + distance * 1.5)));
+  };
+
+  const scoreAssets = assets.map(asset => ({
+    ...asset,
+    portfolioScore: portfolioScore(asset),
+    total: portfolioScore(asset) + asset.rsi + asset.valuation
+  })).sort((a,b) => b.total - a.total);
+
+  const priorityLabel = score => score >= 75 ? ['Prioridad alta','high'] : score >= 55 ? ['Buena oportunidad',''] : score >= 35 ? ['Prioridad media',''] : score >= 20 ? ['Baja prioridad','low'] : ['No priorizar','low'];
+
+  const money = value => new Intl.NumberFormat('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(value);
+
+  let target = TARGET;
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    const currentMonth = new Date().toISOString().slice(0,7);
+    const hasCurrent = saved.some(item => item.type === 'monthly' && String(item.date).slice(0,7) === currentMonth);
+    if (hasCurrent) target = TARGET;
+  } catch (_) {}
+
+  document.getElementById('decision-target').textContent = `USD ${money(target)}`;
+  document.getElementById('rec-amount').innerHTML = `USD ${money(target)}<span>aporte objetivo</span>`;
+
+  const ranking = document.getElementById('ranking');
+  ranking.innerHTML = scoreAssets.map(asset => {
+    const [label, cls] = priorityLabel(asset.total);
+    const reason = asset.weight > asset.upper
+      ? `${asset.reason} Aunque RSI o valoración fueran atractivos, la banda estratégica tiene prioridad.`
+      : asset.reason;
+    return `<article class="asset-decision">
+      <div class="asset-top"><div class="asset-name"><strong>${asset.ticker}</strong><span>${asset.name} · Objetivo ${asset.target}% · banda ${asset.lower}–${asset.upper}%</span><span class="priority ${cls}">${label}</span></div><div class="score"><strong>${asset.total}</strong><span>/ 100</span></div></div>
+      <div class="score-track"><div class="score-fill" style="width:${asset.total}%"></div></div>
+      <div class="score-breakdown"><div class="score-part"><span>Cartera</span><strong>${asset.portfolioScore} / 60</strong></div><div class="score-part"><span>RSI</span><strong>${asset.rsi} / 20</strong></div><div class="score-part"><span>Valoración</span><strong>${asset.valuation} / 20</strong></div></div>
+      <p class="reason"><b>Por qué:</b> ${reason}</p>
+    </article>`;
+  }).join('');
+
+  const winner = scoreAssets[0];
+  document.getElementById('rec-ticker').textContent = winner.ticker;
+  document.getElementById('rec-copy').textContent = `${winner.ticker} tiene la mayor prioridad según el análisis de prueba. La recomendación surge primero de la distribución estratégica y luego de las señales secundarias.`;
+})();
+</script>
 </body>
 </html>
