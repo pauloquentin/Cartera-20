@@ -6,6 +6,71 @@
   <meta name="theme-color" content="#0a1320">
   <title>CARTERA 20 · Cartera</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Ajustes visuales de lectura de la posición */
+    .asset-performance {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 16px 0 18px;
+    }
+    .asset-performance span {
+      color: #dbe4f2;
+      font-size: .92rem;
+    }
+    .asset-performance strong {
+      font-size: 1rem;
+      letter-spacing: -.02em;
+    }
+    .asset-band-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 7px;
+      color: #91a0b5;
+      font-size: .66rem;
+    }
+    .asset-band-label strong {
+      color: #a9b9ce;
+      font-weight: 650;
+    }
+    .asset-progress {
+      display: block;
+    }
+    .asset-progress-track {
+      width: 100%;
+    }
+    .asset-progress > span {
+      display: block;
+      margin-top: 7px;
+      color: #91a0b5;
+      font-size: .67rem;
+      white-space: normal;
+      line-height: 1.35;
+    }
+    .asset-status.in-band {
+      background: #153b31;
+      color: #8de0b4;
+    }
+    .asset-status.out-band {
+      background: #342a23;
+      color: #e5b98a;
+    }
+    @media (max-width: 480px) {
+      .asset-performance {
+        margin-top: 15px;
+        margin-bottom: 19px;
+      }
+      .asset-band-label {
+        font-size: .62rem;
+      }
+      .asset-progress > span {
+        font-size: .62rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <main class="app-shell">
@@ -35,7 +100,11 @@
   localStorage.setItem(STORAGE_KEY, JSON.stringify({version:1,updatedAt:new Date().toISOString(),total,assets:portfolioData}));
   document.getElementById('portfolio-list').innerHTML = portfolioData.map(a => {
     const inBand = a.weight >= a.lower && a.weight <= a.upper;
-    return `<article class="asset-card"><div class="asset-head"><div class="ticker-badge">${a.ticker}</div><div class="asset-title"><strong>${a.name}</strong><span>Objetivo ${a.target}% · banda ${a.lower}–${a.upper}%</span></div><span class="asset-status ${inBand ? 'in-band' : 'out-band'}">${inBand ? 'En banda' : 'Fuera de banda'}</span></div><div class="asset-metrics"><div><span>Unidades</span><strong>${a.units}</strong></div><div><span>PPC</span><strong>$${money(a.ppc)}</strong></div><div><span>Actual</span><strong>$${money(a.marketValue)}</strong></div><div><span>Peso</span><strong>${pct(a.weight)}</strong></div></div><div class="asset-performance ${a.performance >= 0 ? 'positive' : 'negative'}"><span>Rendimiento total</span><strong>${a.performance >= 0 ? '+' : ''}${pct(a.performance)}</strong></div><div class="asset-progress"><div class="asset-progress-track"><div class="asset-progress-fill" style="width:${Math.min(a.weight,100)}%"></div></div><span>Peso actual ${pct(a.weight)} · objetivo ${a.target}%</span></div></article>`;
+    const bandPosition = Math.min((a.weight / a.upper) * 100, 100);
+    let statusText = 'En banda';
+    if (a.weight > a.upper) statusText = `Supera ${a.upper}%`;
+    if (a.weight < a.lower) statusText = `Debajo de ${a.lower}%`;
+    return `<article class="asset-card"><div class="asset-head"><div class="ticker-badge">${a.ticker}</div><div class="asset-title"><strong>${a.name}</strong><span>Objetivo ${a.target}% · banda ${a.lower}–${a.upper}%</span></div><span class="asset-status ${inBand ? 'in-band' : 'out-band'}">${statusText}</span></div><div class="asset-metrics"><div><span>Unidades</span><strong>${a.units}</strong></div><div><span>PPC</span><strong>$${money(a.ppc)}</strong></div><div><span>Actual</span><strong>$${money(a.marketValue)}</strong></div><div><span>Peso</span><strong>${pct(a.weight)}</strong></div></div><div class="asset-performance ${a.performance >= 0 ? 'positive' : 'negative'}"><span>Rendimiento total</span><strong>${a.performance >= 0 ? '+' : ''}${pct(a.performance)}</strong></div><div class="asset-progress"><div class="asset-band-label"><span>Posición en la banda</span><strong>Límite superior ${a.upper}%</strong></div><div class="asset-progress-track"><div class="asset-progress-fill" style="width:${bandPosition}%"></div></div><span>Peso actual ${pct(a.weight)} · objetivo ${a.target}%</span></div></article>`;
   }).join('');
 })();
 </script>
