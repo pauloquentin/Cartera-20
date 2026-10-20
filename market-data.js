@@ -33,7 +33,6 @@ function dividirCSV(linea) {
       continue;
     }
 
-    partes.push;
     actual += caracter;
   }
 
@@ -67,7 +66,7 @@ function parsearHistoricoGoogleSheets(texto) {
 
       if (partes.length < 2) return null;
 
-      const date = partes[0].trim();
+      const date = partes[0].trim().replace(/^"|"$/g, '');
       let closeTexto = partes[partes.length - 1]
         .replace(/^"|"$/g, '')
         .replace(/\$/g, '')
