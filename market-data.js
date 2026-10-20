@@ -1,6 +1,44 @@
 // CARTERA 20 — Motor de datos de mercado
-// Esta primera versión contiene únicamente el cálculo de RSI-14 con Wilder.
-// La fuente de datos (Google Finance u otra) se conectará posteriormente.
+// Cálculos y normalización de datos de mercado, independientes de la fuente.
+
+/**
+ * Convierte datos copiados desde Google Sheets / Google Finance
+ * en una serie uniforme de fecha + cierre.
+ *
+ * @param {string} texto
+ * @returns {Array<{date:string, close:number}>}
+ */
+function parsearHistoricoGoogleSheets(texto) {
+  if (typeof texto !== 'string') return [];
+
+  return texto
+    .split(/\r?\n/)
+    .map(linea => linea.trim())
+    .filter(Boolean)
+    .map(linea => {
+      const partes = linea.split(/\t|;|,/).map(p => p.trim());
+      if (partes.length < 2) return null;
+
+      const date = partes[0];
+      let closeTexto = partes[partes.length - 1]
+        .replace(/\$/g, '')
+        .trim();
+
+      if (closeTexto.includes('.') && closeTexto.includes(',')) {
+        closeTexto = closeTexto.lastIndexOf(',') > closeTexto.lastIndexOf('.')
+          ? closeTexto.replace(/\./g, '').replace(',', '.')
+          : closeTexto.replace(/,/g, '');
+      } else if (closeTexto.includes(',')) {
+        closeTexto = closeTexto.replace(',', '.');
+      }
+
+      const close = Number(closeTexto);
+      return Number.isFinite(close) && close > 0
+        ? { date, close }
+        : null;
+    })
+    .filter(Boolean);
+}
 
 /**
  * Calcula el RSI-14 mediante el suavizado de Wilder.
@@ -72,5 +110,6 @@ function calcularRSI(historicos) {
 
 // Export compatible con navegador y fácil de probar desde consola.
 window.Cartera20MarketData = {
+  parsearHistoricoGoogleSheets,
   calcularRSI
 };
