@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prueba Google Finance · VEA · CARTERA 20</title>
+  <style>
+    body{font-family:system-ui,sans-serif;background:#17212b;color:#e8eef5;padding:24px;max-width:700px;margin:auto}
+    .card{background:#202d39;border-radius:16px;padding:20px;margin-top:16px}
+    .label{color:#91a4b7;font-size:12px;letter-spacing:.08em}.value{font-size:34px;font-weight:700;margin-top:6px}.ok{color:#71d6a0}.muted{color:#91a4b7}
+    textarea{width:100%;box-sizing:border-box;min-height:240px;margin-top:12px;padding:14px;border:1px solid #405363;border-radius:12px;background:#17212b;color:#e8eef5;font:14px monospace}
+    button{margin-top:12px;padding:12px 18px;border:0;border-radius:10px;background:#71d6a0;color:#17212b;font-weight:700;font-size:15px}
+  </style>
+</head>
+<body>
+  <h1>Prueba Google Finance · VEA</h1>
+  <p class="muted">CARTERA 20 · segundo activo adicional a SPY</p>
+  <div class="card">
+    <div class="label">HISTÓRICO VEA</div>
+    <p class="muted">Pegá las dos columnas de Google Sheets y probá el adaptador.</p>
+    <textarea id="datos" placeholder="Fecha    Cierre"></textarea>
+    <button id="probar" type="button">Probar VEA</button>
+  </div>
+  <div class="card">
+    <div class="label">RESULTADO</div>
+    <div id="resultado" class="value">—</div>
+    <p id="detalle" class="muted">Esperando datos.</p>
+  </div>
+  <script src="market-data.js?v=4"></script>
+  <script>
+    document.getElementById('probar').addEventListener('click', async () => {
+      const texto = document.getElementById('datos').value;
+      const proveedor = window.Cartera20MarketData.crearProveedorGoogleSheets({ VEA: texto });
+      const quote = await proveedor.getQuote('VEA');
+      const history = await proveedor.getHistory('VEA');
+      const rsi = window.Cartera20MarketData.calcularRSI(history.data);
+      const resultadoEl = document.getElementById('resultado');
+      const detalleEl = document.getElementById('detalle');
+      if (!history.data.length) {
+        resultadoEl.textContent = 'Sin datos';
+        detalleEl.textContent = 'No se pudieron interpretar cierres.';
+        return;
+      }
+      resultadoEl.textContent = rsi.status === 'ok' ? rsi.value.toFixed(2) : 'Datos insuficientes';
+      resultadoEl.className = `value ${rsi.status === 'ok' ? 'ok' : ''}`;
+      const first = history.data[0];
+      const last = history.data[history.data.length - 1];
+      detalleEl.textContent = `VEA: $${quote.price.toLocaleString('es-AR')} · ${history.data.length} cierres · ${rsi.periods} variaciones · desde ${first.date} ($${first.close.toLocaleString('es-AR')}) · hasta ${last.date} ($${last.close.toLocaleString('es-AR')})`;
+    });
+  </script>
+</body>
+</html>
