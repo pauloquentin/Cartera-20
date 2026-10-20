@@ -29,7 +29,7 @@
     <div id="datos" hidden></div>
   </div>
 
-  <script src="market-data.js?v=4"></script>
+  <script src="market-data.js?v=5"></script>
   <script>
     const SPREADSHEET_ID = '1oVR-CTWE5VmIoy1ly_fJrcrT6ZgtJLllUQBp6iGarv4';
     const SHEET_NAME = 'SPY';
@@ -41,9 +41,18 @@
       return JSON.parse(texto.slice(inicio, fin + 1));
     }
 
-    function numero(valor) {
-      const n = Number(String(valor).replace(/\./g, '').replace(',', '.'));
-      return Number.isFinite(n) ? n : null;
+    // Google Visualization devuelve las fechas como Date(año,mes,día),
+    // con mes indexado desde 0. Las normalizamos a DD/MM/AAAA para la UI.
+    function normalizarFecha(valor) {
+      const texto = String(valor || '').trim();
+      const match = texto.match(/^Date\((\d+),(\d+),(\d+)/);
+      if (match) {
+        const anio = Number(match[1]);
+        const mes = Number(match[2]) + 1;
+        const dia = Number(match[3]);
+        return `${String(dia).padStart(2,'0')}/${String(mes).padStart(2,'0')}/${anio}`;
+      }
+      return texto;
     }
 
     async function obtenerSPY() {
@@ -56,9 +65,11 @@
 
       const historico = filas.map(fila => {
         const c = fila.c || [];
-        const fecha = c[0] && c[0].v != null ? String(c[0].v) : '';
+        const fechaRaw = c[0] && c[0].v != null ? String(c[0].v) : '';
         const cierre = c[1] && c[1].v != null ? Number(c[1].v) : null;
-        return Number.isFinite(cierre) && cierre > 0 ? { date: fecha, close: cierre } : null;
+        return Number.isFinite(cierre) && cierre > 0
+          ? { date: normalizarFecha(fechaRaw), close: cierre }
+          : null;
       }).filter(Boolean);
 
       return { historico, url };
