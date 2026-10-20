@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prueba proveedor · CARTERA 20</title>
+  <style>
+    body{font-family:system-ui,sans-serif;background:#17212b;color:#e8eef5;padding:24px;max-width:700px;margin:auto}
+    .card{background:#202d39;border-radius:16px;padding:20px;margin-top:16px}
+    .label{color:#91a4b7;font-size:12px;letter-spacing:.08em}
+    .value{font-size:28px;font-weight:700;margin-top:6px}.ok{color:#71d6a0}.muted{color:#91a4b7}
+  </style>
+</head>
+<body>
+  <h1>Prueba del proveedor</h1>
+  <p class="muted">CARTERA 20 · interfaz independiente de la fuente</p>
+
+  <div class="card">
+    <div class="label">PROVEEDOR DE PRUEBA</div>
+    <div id="proveedor" class="value">—</div>
+    <p id="detalle" class="muted">Inicializando…</p>
+  </div>
+
+  <script src="market-data.js"></script>
+  <script>
+    const historicoSPY = [
+      {date:'15/10/2026 17:00:00', close:20820},
+      {date:'16/10/2026 17:00:00', close:20620}
+    ];
+
+    const proveedorPrueba = {
+      nombre: 'Proveedor de prueba',
+      async getQuote(ticker) {
+        return { ticker, price: 20620, currency: 'ARS', source: this.nombre };
+      },
+      async getHistory(ticker) {
+        return { ticker, data: historicoSPY, source: this.nombre };
+      }
+    };
+
+    const proveedorEl = document.getElementById('proveedor');
+    const detalleEl = document.getElementById('detalle');
+
+    async function probar() {
+      const quote = await proveedorPrueba.getQuote('SPY');
+      const history = await proveedorPrueba.getHistory('SPY');
+      const rsi = window.Cartera20MarketData.calcularRSI(history.data);
+
+      const ok = quote.price === 20620
+        && history.data.length === 2
+        && rsi.status === 'insufficient-data';
+
+      proveedorEl.textContent = ok ? 'OK' : 'ERROR';
+      proveedorEl.className = `value ${ok ? 'ok' : ''}`;
+      detalleEl.textContent = ok
+        ? `Proveedor: ${quote.source} · SPY: $${quote.price.toLocaleString('es-AR')} · histórico recibido: ${history.data.length} cierres.`
+        : 'La interfaz de prueba no respondió como se esperaba.';
+    }
+
+    probar();
+  </script>
+</body>
+</html>
