@@ -8,7 +8,7 @@
     body{font-family:system-ui,sans-serif;background:#17212b;color:#e8eef5;padding:24px;max-width:700px;margin:auto}
     .card{background:#202d39;border-radius:16px;padding:20px;margin-top:16px}
     .label{color:#91a4b7;font-size:12px;letter-spacing:.08em}
-    .value{font-size:28px;font-weight:700;margin-top:6px}.ok{color:#71d6a0}.muted{color:#91a4b7}
+    .value{font-size:28px;font-weight:700;margin-top:6px}.ok{color:#71d6a0}.error{color:#ffb4a8}.muted{color:#91a4b7}
   </style>
 </head>
 <body>
@@ -21,41 +21,52 @@
     <p id="detalle" class="muted">Inicializando…</p>
   </div>
 
-  <script src="market-data.js"></script>
+  <!-- v=2 evita que el navegador reutilice una copia anterior del motor. -->
+  <script src="market-data.js?v=2"></script>
   <script>
-    const historicoSPY = [
-      {date:'15/10/2026 17:00:00', close:20820},
-      {date:'16/10/2026 17:00:00', close:20620}
-    ];
-
-    const proveedorPrueba = window.Cartera20MarketData.crearProveedorMercado({
-      name: 'Proveedor de prueba',
-      async getQuote(ticker) {
-        return { ticker, price: 20620, currency: 'ARS', source: 'Proveedor de prueba' };
-      },
-      async getHistory(ticker) {
-        return { ticker, data: historicoSPY, source: 'Proveedor de prueba' };
-      }
-    });
-
     const proveedorEl = document.getElementById('proveedor');
     const detalleEl = document.getElementById('detalle');
 
     async function probar() {
-      const quote = await proveedorPrueba.getQuote('SPY');
-      const history = await proveedorPrueba.getHistory('SPY');
-      const rsi = window.Cartera20MarketData.calcularRSI(history.data);
+      try {
+        if (!window.Cartera20MarketData || typeof window.Cartera20MarketData.crearProveedorMercado !== 'function') {
+          throw new Error('No se cargó la versión actual de market-data.js');
+        }
 
-      const ok = proveedorPrueba.name === 'Proveedor de prueba'
-        && quote.price === 20620
-        && history.data.length === 2
-        && rsi.status === 'insufficient-data';
+        const historicoSPY = [
+          {date:'15/10/2026 17:00:00', close:20820},
+          {date:'16/10/2026 17:00:00', close:20620}
+        ];
 
-      proveedorEl.textContent = ok ? 'OK' : 'ERROR';
-      proveedorEl.className = `value ${ok ? 'ok' : ''}`;
-      detalleEl.textContent = ok
-        ? `Interfaz validada · SPY: $${quote.price.toLocaleString('es-AR')} · histórico recibido: ${history.data.length} cierres.`
-        : 'La interfaz de proveedor no respondió como se esperaba.';
+        const proveedorPrueba = window.Cartera20MarketData.crearProveedorMercado({
+          name: 'Proveedor de prueba',
+          async getQuote(ticker) {
+            return { ticker, price: 20620, currency: 'ARS', source: 'Proveedor de prueba' };
+          },
+          async getHistory(ticker) {
+            return { ticker, data: historicoSPY, source: 'Proveedor de prueba' };
+          }
+        });
+
+        const quote = await proveedorPrueba.getQuote('SPY');
+        const history = await proveedorPrueba.getHistory('SPY');
+        const rsi = window.Cartera20MarketData.calcularRSI(history.data);
+
+        const ok = proveedorPrueba.name === 'Proveedor de prueba'
+          && quote.price === 20620
+          && history.data.length === 2
+          && rsi.status === 'insufficient-data';
+
+        proveedorEl.textContent = ok ? 'OK' : 'ERROR';
+        proveedorEl.className = `value ${ok ? 'ok' : 'error'}`;
+        detalleEl.textContent = ok
+          ? `Interfaz validada · SPY: $${quote.price.toLocaleString('es-AR')} · histórico recibido: ${history.data.length} cierres.`
+          : 'La interfaz de proveedor no respondió como se esperaba.';
+      } catch (error) {
+        proveedorEl.textContent = 'ERROR';
+        proveedorEl.className = 'value error';
+        detalleEl.textContent = error.message || 'Error desconocido.';
+      }
     }
 
     probar();
