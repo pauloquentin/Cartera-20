@@ -20,7 +20,7 @@
 
   <div class="card">
     <div class="label">PEGAR DATOS DE GOOGLE SHEETS</div>
-    <p class="small muted">Copiá las dos columnas de fecha y cierre de Google Finance y pegálas aquí. Se acepta tabulación, coma o punto y coma, con o sin encabezado.</p>
+    <p class="small muted">Copiá las dos columnas de fecha y cierre de Google Finance y pegálas aquí. El motor de CARTERA 20 se encarga de normalizar los datos y calcular el RSI.</p>
     <textarea id="datos" placeholder="Fecha    Cierre\n22/04/2026    52375\n23/04/2026    52325\n..."></textarea>
     <button id="calcular" type="button">Calcular RSI-14</button>
   </div>
@@ -37,26 +37,8 @@
     const resultadoEl = document.getElementById('resultado');
     const detalleEl = document.getElementById('detalle');
 
-    function parsearDatos(texto) {
-      return texto.split(/\r?\n/).map(linea => linea.trim()).filter(Boolean).map(linea => {
-        const partes = linea.split(/\t|;|,/).map(p => p.trim());
-        if (partes.length < 2) return null;
-        const date = partes[0];
-        let closeTexto = partes[partes.length - 1].replace(/\$/g,'').trim();
-        if (closeTexto.includes('.') && closeTexto.includes(',')) {
-          closeTexto = closeTexto.lastIndexOf(',') > closeTexto.lastIndexOf('.')
-            ? closeTexto.replace(/\./g,'').replace(',','.')
-            : closeTexto.replace(/,/g,'');
-        } else if (closeTexto.includes(',')) {
-          closeTexto = closeTexto.replace(',','.');
-        }
-        const close = Number(closeTexto);
-        return Number.isFinite(close) && close > 0 ? {date, close} : null;
-      }).filter(Boolean);
-    }
-
     document.getElementById('calcular').addEventListener('click', () => {
-      const historicos = parsearDatos(datosEl.value);
+      const historicos = window.Cartera20MarketData.parsearHistoricoGoogleSheets(datosEl.value);
       const resultado = window.Cartera20MarketData.calcularRSI(historicos);
 
       if (resultado.status !== 'ok') {
