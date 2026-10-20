@@ -1,13 +1,24 @@
 // CARTERA 20 — Motor de datos de mercado
 // Cálculos y normalización de datos de mercado, independientes de la fuente.
 
+function normalizarNumeroMercado(valor) {
+  if (typeof valor === 'number') return valor;
+  let texto = String(valor ?? '').trim().replace(/^"|"$/g, '').replace(/\$/g, '').trim();
+  if (!texto) return NaN;
+
+  if (texto.includes('.') && texto.includes(',')) {
+    texto = texto.lastIndexOf(',') > texto.lastIndexOf('.')
+      ? texto.replace(/\./g, '').replace(',', '.')
+      : texto.replace(/,/g, '');
+  } else if (texto.includes(',')) {
+    texto = texto.replace(',', '.');
+  }
+
+  return Number(texto);
+}
+
 /**
  * Divide una línea CSV respetando campos entre comillas.
- * Google Visualization puede devolver fechas como Date(2026,9,19,17,0),
- * por lo que no podemos separar simplemente por cada coma.
- *
- * @param {string} linea
- * @returns {string[]}
  */
 function dividirCSV(linea) {
   const partes = [];
@@ -40,15 +51,26 @@ function dividirCSV(linea) {
   return partes;
 }
 
+function convertirFechaGoogle(valor) {
+  const texto = String(valor ?? '').trim().replace(/^"|"$/g, '');
+  const match = texto.match(/^Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+)(?:,(\d+))?)?\)$/);
+
+  if (!match) return texto;
+
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const hour = Number(match[4] || 0);
+  const minute = Number(match[5] || 0);
+  const second = Number(match[6] || 0);
+
+  return new Date(year, month, day, hour, minute, second).toISOString();
+}
+
 /**
  * Convierte datos copiados desde Google Sheets / Google Finance
  * en una serie uniforme de fecha + cierre.
- *
- * Acepta tanto texto pegado con tabulaciones/semicolon como CSV real
- * devuelto por Google Visualization (gviz).
- *
- * @param {string} texto
- * @returns {Array<{date:string, close:number}>}
+ * Acepta texto tabulado, CSV y valores Date() de Google Visualization.
  */
 function parsearHistoricoGoogleSheets(texto) {
   if (typeof texto !== 'string') return [];
@@ -58,15 +80,12 @@ function parsearHistoricoGoogleSheets(texto) {
     .map(linea => linea.trim())
     .filter(Boolean)
     .map(linea => {
-      // Google Visualization puede devolver el objeto Date() sin comillas.
-      // En ese caso la coma forma parte de la fecha y no debe dividirla.
       const fechaGoogle = linea.match(/^\"?(Date\([^)]*\))\"?\s*,\s*(.+)$/);
-
       let date = '';
       let closeTexto = '';
 
       if (fechaGoogle) {
-        date = fechaGoogle[1].trim();
+        date = convertirFechaGoogle(fechaGoogle[1]);
         closeTexto = fechaGoogle[2].trim();
       } else {
         const partes = linea.includes('\t')
@@ -77,24 +96,11 @@ function parsearHistoricoGoogleSheets(texto) {
 
         if (partes.length < 2) return null;
 
-        date = partes[0].trim().replace(/^\"|\"$/g, '');
-        closeTexto = partes[partes.length - 1].trim();
+        date = convertirFechaGoogle(partes[0]);
+        closeTexto = partes[partes.length - 1];
       }
 
-      closeTexto = closeTexto
-        .replace(/^\"|\"$/g, '')
-        .replace(/\$/g, '')
-        .trim();
-
-      if (closeTexto.includes('.') && closeTexto.includes(',')) {
-        closeTexto = closeTexto.lastIndexOf(',') > closeTexto.lastIndexOf('.')
-          ? closeTexto.replace(/\./g, '').replace(',', '.')
-          : closeTexto.replace(/,/g, '');
-      } else if (closeTexto.includes(',')) {
-        closeTexto = closeTexto.replace(',', '.');
-      }
-
-      const close = Number(closeTexto);
+      const close = normalizarNumeroMercado(closeTexto);
       return Number.isFinite(close) && close > 0
         ? { date, close }
         : null;
@@ -103,10 +109,45 @@ function parsearHistoricoGoogleSheets(texto) {
 }
 
 /**
+ * Parsea la respuesta JSON de Google Visualization (GViz).
+ * Es la ruta principal del proveedor porque evita depender del formato CSV.
+ */
+function parsearRespuestaGviz(texto) {
+  if (typeof texto !== 'string' || !texto.trim()) return [];
+
+  const inicio = texto.indexOf('{');
+  const fin = texto.lastIndexOf('}');
+  if (inicio === -1 || fin === -1 || fin <= inicio) return [];
+
+  let payload;
+  try {
+    payload = JSON.parse(texto.slice(inicio, fin + 1));
+  } catch (error) {
+    return [];
+  }
+
+  const filas = payload?.table?.rows;
+  if (!Array.isArray(filas)) return [];
+
+  return filas
+    .map(fila => {
+      const celdas = Array.isArray(fila?.c) ? fila.c : [];
+      const fecha = celdas[0]?.v ?? celdas[0]?.f ?? '';
+      const cierre = celdas[1]?.v ?? celdas[1]?.f ?? '';
+      const close = normalizarNumeroMercado(cierre);
+
+      if (!fecha || !Number.isFinite(close) || close <= 0) return null;
+
+      return {
+        date: convertirFechaGoogle(fecha),
+        close
+      };
+    })
+    .filter(Boolean);
+}
+
+/**
  * Calcula el RSI-14 mediante el suavizado de Wilder.
- *
- * @param {Array<{date:string, close:number}>} historicos
- * @returns {{value:number|null, date:string|null, periods:number, status:string}}
  */
 function calcularRSI(historicos) {
   if (!Array.isArray(historicos) || historicos.length < 15) {
@@ -151,9 +192,6 @@ function calcularRSI(historicos) {
   };
 }
 
-/**
- * Crea un proveedor de mercado con una interfaz estable.
- */
 function crearProveedorMercado(provider) {
   if (!provider || typeof provider !== 'object') throw new Error('Proveedor de mercado inválido.');
   if (typeof provider.getQuote !== 'function') throw new Error('El proveedor debe implementar getQuote(ticker).');
@@ -167,14 +205,8 @@ function crearProveedorMercado(provider) {
 }
 
 /**
- * Crea un adaptador para datos que provienen de Google Sheets/Google Finance.
- * Puede recibir históricos ya cargados por ticker o consultar directamente
- * una hoja pública mediante Google Visualization (gviz).
- *
- * @param {Object} config
- * @param {string} config.spreadsheetId ID del Google Sheet
- * @param {Object<string,string>} [config.sheetByTicker] Mapa ticker -> nombre de pestaña
- * @param {Object<string,string>} [config.historicosPorTicker] Datos precargados para tests/offline
+ * Proveedor Google Sheets / Google Finance.
+ * Un solo proveedor sirve para cualquier cantidad de tickers.
  */
 function crearProveedorGoogleSheets(config) {
   const opciones = config && typeof config === 'object' ? config : {};
@@ -190,9 +222,9 @@ function crearProveedorGoogleSheets(config) {
 
   const construirUrl = ticker => {
     if (!spreadsheetId) throw new Error('Falta el ID del Google Sheet.');
-    const sheet = encodeURIComponent(nombrePestana(ticker).replace(/'/g, "''"));
+    const sheet = encodeURIComponent(nombrePestana(ticker));
     const query = encodeURIComponent('select A, B where A is not null order by A');
-    return `https://docs.google.com/spreadsheets/d/${encodeURIComponent(spreadsheetId)}/gviz/tq?sheet=${sheet}&tqx=out:csv&tq=${query}`;
+    return `https://docs.google.com/spreadsheets/d/${encodeURIComponent(spreadsheetId)}/gviz/tq?sheet=${sheet}&tqx=out:json&tq=${query}`;
   };
 
   const cargarHistorico = async ticker => {
@@ -207,10 +239,12 @@ function crearProveedorGoogleSheets(config) {
     }
 
     const texto = await response.text();
-    const historico = parsearHistoricoGoogleSheets(texto);
+    const historico = parsearRespuestaGviz(texto);
+
     if (!historico.length) {
-      throw new Error(`No se encontraron cierres para ${ticker} en la pestaña ${nombrePestana(ticker)}.`);
+      throw new Error(`Google Sheets respondió, pero no hay cierres válidos para ${ticker} en la pestaña ${nombrePestana(ticker)}.`);
     }
+
     return historico;
   };
 
@@ -219,17 +253,12 @@ function crearProveedorGoogleSheets(config) {
 
     async getHistory(ticker) {
       const historico = await cargarHistorico(ticker);
-      return {
-        ticker,
-        data: historico,
-        source: 'Google Sheets / Google Finance'
-      };
+      return { ticker, data: historico, source: 'Google Sheets / Google Finance' };
     },
 
     async getQuote(ticker) {
       const historico = await cargarHistorico(ticker);
       const ultimo = historico[historico.length - 1] || null;
-
       return {
         ticker,
         price: ultimo ? ultimo.close : null,
@@ -242,7 +271,9 @@ function crearProveedorGoogleSheets(config) {
 }
 
 window.Cartera20MarketData = {
+  normalizarNumeroMercado,
   parsearHistoricoGoogleSheets,
+  parsearRespuestaGviz,
   calcularRSI,
   crearProveedorMercado,
   crearProveedorGoogleSheets
