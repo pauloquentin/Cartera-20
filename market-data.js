@@ -108,8 +108,36 @@ function calcularRSI(historicos) {
   };
 }
 
+/**
+ * Crea un proveedor de mercado con una interfaz estable.
+ * La fuente real se podrá reemplazar sin modificar el resto del motor.
+ *
+ * @param {{name:string, getQuote:function, getHistory:function}} provider
+ * @returns {{name:string, getQuote:function, getHistory:function}}
+ */
+function crearProveedorMercado(provider) {
+  if (!provider || typeof provider !== 'object') {
+    throw new Error('Proveedor de mercado inválido.');
+  }
+
+  if (typeof provider.getQuote !== 'function') {
+    throw new Error('El proveedor debe implementar getQuote(ticker).');
+  }
+
+  if (typeof provider.getHistory !== 'function') {
+    throw new Error('El proveedor debe implementar getHistory(ticker).');
+  }
+
+  return {
+    name: provider.name || 'Proveedor sin nombre',
+    getQuote: provider.getQuote,
+    getHistory: provider.getHistory
+  };
+}
+
 // Export compatible con navegador y fácil de probar desde consola.
 window.Cartera20MarketData = {
   parsearHistoricoGoogleSheets,
-  calcularRSI
+  calcularRSI,
+  crearProveedorMercado
 };
