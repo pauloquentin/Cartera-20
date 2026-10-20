@@ -58,17 +58,31 @@ function parsearHistoricoGoogleSheets(texto) {
     .map(linea => linea.trim())
     .filter(Boolean)
     .map(linea => {
-      const partes = linea.includes('\t')
-        ? linea.split('\t').map(p => p.trim())
-        : linea.includes(';')
-          ? linea.split(';').map(p => p.trim())
-          : dividirCSV(linea);
+      // Google Visualization puede devolver el objeto Date() sin comillas.
+      // En ese caso la coma forma parte de la fecha y no debe dividirla.
+      const fechaGoogle = linea.match(/^\"?(Date\([^)]*\))\"?\s*,\s*(.+)$/);
 
-      if (partes.length < 2) return null;
+      let date = '';
+      let closeTexto = '';
 
-      const date = partes[0].trim().replace(/^"|"$/g, '');
-      let closeTexto = partes[partes.length - 1]
-        .replace(/^"|"$/g, '')
+      if (fechaGoogle) {
+        date = fechaGoogle[1].trim();
+        closeTexto = fechaGoogle[2].trim();
+      } else {
+        const partes = linea.includes('\t')
+          ? linea.split('\t').map(p => p.trim())
+          : linea.includes(';')
+            ? linea.split(';').map(p => p.trim())
+            : dividirCSV(linea);
+
+        if (partes.length < 2) return null;
+
+        date = partes[0].trim().replace(/^\"|\"$/g, '');
+        closeTexto = partes[partes.length - 1].trim();
+      }
+
+      closeTexto = closeTexto
+        .replace(/^\"|\"$/g, '')
         .replace(/\$/g, '')
         .trim();
 
