@@ -2,8 +2,51 @@
 // Cálculos y normalización de datos de mercado, independientes de la fuente.
 
 /**
+ * Divide una línea CSV respetando campos entre comillas.
+ * Google Visualization puede devolver fechas como Date(2026,9,19,17,0),
+ * por lo que no podemos separar simplemente por cada coma.
+ *
+ * @param {string} linea
+ * @returns {string[]}
+ */
+function dividirCSV(linea) {
+  const partes = [];
+  let actual = '';
+  let entreComillas = false;
+
+  for (let i = 0; i < linea.length; i += 1) {
+    const caracter = linea[i];
+
+    if (caracter === '"') {
+      if (entreComillas && linea[i + 1] === '"') {
+        actual += '"';
+        i += 1;
+      } else {
+        entreComillas = !entreComillas;
+      }
+      continue;
+    }
+
+    if (caracter === ',' && !entreComillas) {
+      partes.push(actual.trim());
+      actual = '';
+      continue;
+    }
+
+    partes.push;
+    actual += caracter;
+  }
+
+  partes.push(actual.trim());
+  return partes;
+}
+
+/**
  * Convierte datos copiados desde Google Sheets / Google Finance
  * en una serie uniforme de fecha + cierre.
+ *
+ * Acepta tanto texto pegado con tabulaciones/semicolon como CSV real
+ * devuelto por Google Visualization (gviz).
  *
  * @param {string} texto
  * @returns {Array<{date:string, close:number}>}
@@ -16,11 +59,17 @@ function parsearHistoricoGoogleSheets(texto) {
     .map(linea => linea.trim())
     .filter(Boolean)
     .map(linea => {
-      const partes = linea.split(/\t|;|,/).map(p => p.trim());
+      const partes = linea.includes('\t')
+        ? linea.split('\t').map(p => p.trim())
+        : linea.includes(';')
+          ? linea.split(';').map(p => p.trim())
+          : dividirCSV(linea);
+
       if (partes.length < 2) return null;
 
-      const date = partes[0];
+      const date = partes[0].trim();
       let closeTexto = partes[partes.length - 1]
+        .replace(/^"|"$/g, '')
         .replace(/\$/g, '')
         .trim();
 
