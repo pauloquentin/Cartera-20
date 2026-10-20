@@ -24,8 +24,6 @@
 
   <script src="market-data.js"></script>
   <script>
-    // Serie mínima de prueba: las mismas observaciones que validamos manualmente.
-    // Se incluyen 16 cierres para producir el tercer RSI validado.
     const cierres = [
       52375, 52325, 52375, 52500, 52600, 52450, 52700, 52850,
       52700, 52900, 53100, 53000, 53250, 53400, 53500, 53600
@@ -42,7 +40,7 @@
 
     resultadoEl.textContent = resultado.value === null
       ? 'Sin datos suficientes'
-      : resultado.value.toFixed(8);
+      : resultado.value.toFixed(2);
 
     resultadoEl.classList.toggle('ok', resultado.status === 'ok');
     detalleEl.textContent = `Estado: ${resultado.status} · períodos: ${resultado.periods}`;
