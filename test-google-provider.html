@@ -10,6 +10,8 @@
     .label{color:#91a4b7;font-size:12px;letter-spacing:.08em}.value{font-size:34px;font-weight:700;margin-top:6px}.ok{color:#71d6a0}.muted{color:#91a4b7}
     textarea{width:100%;box-sizing:border-box;min-height:240px;margin-top:12px;padding:14px;border:1px solid #405363;border-radius:12px;background:#17212b;color:#e8eef5;font:14px monospace}
     button{margin-top:12px;padding:12px 18px;border:0;border-radius:10px;background:#71d6a0;color:#17212b;font-weight:700;font-size:15px}
+    .audit{margin-top:14px;padding-top:14px;border-top:1px solid #405363;font-size:13px;line-height:1.7}
+    .audit strong{color:#e8eef5}
   </style>
 </head>
 <body>
@@ -27,9 +29,10 @@
     <div class="label">RESULTADO</div>
     <div id="resultado" class="value">—</div>
     <p id="detalle" class="muted">Esperando datos.</p>
+    <div id="auditoria" class="audit" hidden></div>
   </div>
 
-  <script src="market-data.js?v=2"></script>
+  <script src="market-data.js?v=3"></script>
   <script>
     document.getElementById('probar').addEventListener('click', async () => {
       const texto = document.getElementById('datos').value;
@@ -40,16 +43,29 @@
 
       const resultadoEl = document.getElementById('resultado');
       const detalleEl = document.getElementById('detalle');
+      const auditoriaEl = document.getElementById('auditoria');
 
       if (!history.data.length) {
         resultadoEl.textContent = 'Sin datos';
         detalleEl.textContent = 'No se pudieron interpretar cierres.';
+        auditoriaEl.hidden = true;
         return;
       }
+
+      const primero = history.data[0];
+      const ultimo = history.data[history.data.length - 1];
 
       resultadoEl.textContent = rsi.status === 'ok' ? rsi.value.toFixed(2) : 'Datos insuficientes';
       resultadoEl.className = `value ${rsi.status === 'ok' ? 'ok' : ''}`;
       detalleEl.textContent = `Proveedor: ${proveedor.name} · SPY: $${quote.price.toLocaleString('es-AR')} · ${history.data.length} cierres · ${rsi.status === 'ok' ? `${rsi.periods} variaciones` : 'se necesitan al menos 15 cierres'}`;
+
+      auditoriaEl.hidden = false;
+      auditoriaEl.innerHTML = `
+        <div><strong>Primer dato:</strong> ${primero.date} · ${primero.close.toLocaleString('es-AR')}</div>
+        <div><strong>Último dato:</strong> ${ultimo.date} · ${ultimo.close.toLocaleString('es-AR')}</div>
+        <div><strong>Cierres recibidos:</strong> ${history.data.length}</div>
+        <div><strong>Variaciones:</strong> ${Math.max(0, history.data.length - 1)}</div>
+      `;
     });
   </script>
 </body>
