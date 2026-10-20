@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prueba Google Sheets · BRKB · CARTERA 20</title>
+  <style>
+    body{font-family:system-ui,sans-serif;background:#17212b;color:#e8eef5;padding:24px;max-width:700px;margin:auto}
+    .card{background:#202d39;border-radius:16px;padding:20px;margin-top:16px}
+    .label{color:#91a4b7;font-size:12px;letter-spacing:.08em}.value{font-size:34px;font-weight:700;margin-top:6px}.ok{color:#71d6a0}.error{color:#f29b9b}.muted{color:#91a4b7}.row{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid #344654}.row:last-child{border-bottom:0}.row strong{font-weight:600}
+    button{margin-top:12px;padding:12px 18px;border:0;border-radius:10px;background:#71d6a0;color:#17212b;font-weight:700;font-size:15px}
+  </style>
+</head>
+<body>
+  <h1>Google Sheets · conexión en vivo</h1>
+  <p class="muted">CARTERA 20 · prueba exclusiva para BRKB</p>
+
+  <div class="card">
+    <div class="label">FUENTE</div>
+    <div class="value">Google Finance → Sheets</div>
+    <p class="muted">La aplicación consulta la pestaña BRKB de la hoja de mercado.</p>
+    <button id="probar" type="button">Probar conexión</button>
+  </div>
+
+  <div class="card">
+    <div class="label">RESULTADO</div>
+    <div id="estado" class="value">Esperando prueba…</div>
+    <div id="detalle" class="muted"></div>
+    <div id="datos" hidden></div>
+  </div>
+
+  <script src="market-data.js?v=5"></script>
+  <script>
+    const SPREADSHEET_ID = '1oVR-CTWE5VmIoy1ly_fJrcrT6ZgtJLllUQBp6iGarv4';
+    const SHEET_NAME = 'BRKB';
+
+    function extraerRespuestaGoogle(texto) {
+      const inicio = texto.indexOf('{');
+      const fin = texto.lastIndexOf('}');
+      if (inicio < 0 || fin < inicio) throw new Error('Respuesta de Google no reconocida.');
+      return JSON.parse(texto.slice(inicio, fin + 1));
+    }
+
+    function normalizarFecha(valor) {
+      const texto = String(valor || '').trim();
+      const match = texto.match(/^Date\((\d+),(\d+),(\d+)/);
+      if (match) {
+        const anio = Number(match[1]);
+        const mes = Number(match[2]) + 1;
+        const dia = Number(match[3]);
+        return `${String(dia).padStart(2,'0')}/${String(mes).padStart(2,'0')}/${anio}`;
+      }
+      return texto;
+    }
+
+    async function obtenerHistorico() {
+      const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+      const respuesta = await fetch(url, { cache: 'no-store' });
+      if (!respuesta.ok) throw new Error(`Google respondió HTTP ${respuesta.status}.`);
+      const texto = await respuesta.text();
+      const json = extraerRespuestaGoogle(texto);
+      const filas = json.table && json.table.rows ? json.table.rows : [];
+
+      return filas.map(fila => {
+        const c = fila.c || [];
+        const fechaRaw = c[0] && c[0].v != null ? String(c[0].v) : '';
+        const cierre = c[1] && c[1].v != null ? Number(c[1].v) : null;
+        return Number.isFinite(cierre) && cierre > 0
+          ? { date: normalizarFecha(fechaRaw), close: cierre }
+          : null;
+      }).filter(Boolean);
+    }
+
+    document.getElementById('probar').addEventListener('click', async () => {
+      const estado = document.getElementById('estado');
+      const detalle = document.getElementById('detalle');
+      const datos = document.getElementById('datos');
+      estado.className = 'value';
+      estado.textContent = 'Consultando…';
+      detalle.textContent = '';
+      datos.hidden = true;
+
+      try {
+        const historico = await obtenerHistorico();
+        if (!historico.length) throw new Error('Google respondió, pero no llegaron cierres válidos.');
+        const rsi = window.Cartera20MarketData.calcularRSI(historico);
+        const primero = historico[0];
+        const ultimo = historico[historico.length - 1];
+
+        estado.textContent = rsi.status === 'ok' ? `RSI-14 · ${rsi.value.toFixed(2)}` : 'Datos insuficientes';
+        estado.className = `value ${rsi.status === 'ok' ? 'ok' : ''}`;
+        detalle.textContent = rsi.status === 'ok' ? 'Conexión y cálculo validados.' : 'La conexión funciona, pero todavía no hay suficientes cierres para RSI-14.';
+        datos.hidden = false;
+        datos.innerHTML = `
+          <div class="row"><span>Activo</span><strong>BRKB</strong></div>
+          <div class="row"><span>Cierres recibidos</span><strong>${historico.length}</strong></div>
+          <div class="row"><span>Variaciones</span><strong>${Math.max(0, historico.length - 1)}</strong></div>
+          <div class="row"><span>Primer cierre</span><strong>${primero.date} · ${primero.close.toLocaleString('es-AR')}</strong></div>
+          <div class="row"><span>Último cierre</span><strong>${ultimo.date} · ${ultimo.close.toLocaleString('es-AR')}</strong></div>
+          <div class="row"><span>Fuente</span><strong>Google Sheets / Google Finance</strong></div>
+        `;
+      } catch (error) {
+        estado.textContent = 'No conectado';
+        estado.className = 'value error';
+        detalle.textContent = error.message || 'Error desconocido al consultar Google Sheets.';
+      }
+    });
+  </script>
+</body>
+</html>
