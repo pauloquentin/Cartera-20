@@ -106,22 +106,57 @@ function crearProveedorMercado(provider) {
 
 /**
  * Crea un adaptador para datos que provienen de Google Sheets/Google Finance.
- * No realiza ninguna conexión externa: recibe el texto copiado desde Sheets.
- * Esto nos permite validar el formato antes de automatizar la fuente.
+ * Puede recibir históricos ya cargados por ticker o consultar directamente
+ * una hoja pública mediante Google Visualization (gviz).
  *
- * @param {Object<string,string>} historicosPorTicker
+ * @param {Object} config
+ * @param {string} config.spreadsheetId ID del Google Sheet
+ * @param {Object<string,string>} [config.sheetByTicker] Mapa ticker -> nombre de pestaña
+ * @param {Object<string,string>} [config.historicosPorTicker] Datos precargados para tests/offline
  */
-function crearProveedorGoogleSheets(historicosPorTicker) {
-  const datos = historicosPorTicker && typeof historicosPorTicker === 'object'
-    ? historicosPorTicker
+function crearProveedorGoogleSheets(config) {
+  const opciones = config && typeof config === 'object' ? config : {};
+  const spreadsheetId = String(opciones.spreadsheetId || '').trim();
+  const sheetByTicker = opciones.sheetByTicker && typeof opciones.sheetByTicker === 'object'
+    ? opciones.sheetByTicker
     : {};
+  const historicosPorTicker = opciones.historicosPorTicker && typeof opciones.historicosPorTicker === 'object'
+    ? opciones.historicosPorTicker
+    : {};
+
+  const nombrePestana = ticker => String(sheetByTicker[ticker] || ticker).trim();
+
+  const construirUrl = ticker => {
+    if (!spreadsheetId) throw new Error('Falta el ID del Google Sheet.');
+    const sheet = encodeURIComponent(nombrePestana(ticker).replace(/'/g, "''"));
+    const query = encodeURIComponent('select A, B where A is not null order by A');
+    return `https://docs.google.com/spreadsheets/d/${encodeURIComponent(spreadsheetId)}/gviz/tq?sheet=${sheet}&tqx=out:csv&tq=${query}`;
+  };
+
+  const cargarHistorico = async ticker => {
+    const precargado = historicosPorTicker[ticker];
+    if (typeof precargado === 'string' && precargado.trim()) {
+      return parsearHistoricoGoogleSheets(precargado);
+    }
+
+    const response = await fetch(construirUrl(ticker), { cache: 'no-store' });
+    if (!response.ok) {
+      throw new Error(`No se pudo consultar Google Sheets (${response.status}).`);
+    }
+
+    const texto = await response.text();
+    const historico = parsearHistoricoGoogleSheets(texto);
+    if (!historico.length) {
+      throw new Error(`No se encontraron cierres para ${ticker} en la pestaña ${nombrePestana(ticker)}.`);
+    }
+    return historico;
+  };
 
   return crearProveedorMercado({
     name: 'Google Sheets / Google Finance',
 
     async getHistory(ticker) {
-      const texto = datos[ticker];
-      const historico = parsearHistoricoGoogleSheets(texto || '');
+      const historico = await cargarHistorico(ticker);
       return {
         ticker,
         data: historico,
@@ -130,8 +165,7 @@ function crearProveedorGoogleSheets(historicosPorTicker) {
     },
 
     async getQuote(ticker) {
-      const texto = datos[ticker];
-      const historico = parsearHistoricoGoogleSheets(texto || '');
+      const historico = await cargarHistorico(ticker);
       const ultimo = historico[historico.length - 1] || null;
 
       return {
