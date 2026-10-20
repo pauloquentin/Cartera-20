@@ -28,15 +28,15 @@
       {date:'16/10/2026 17:00:00', close:20620}
     ];
 
-    const proveedorPrueba = {
-      nombre: 'Proveedor de prueba',
+    const proveedorPrueba = window.Cartera20MarketData.crearProveedorMercado({
+      name: 'Proveedor de prueba',
       async getQuote(ticker) {
-        return { ticker, price: 20620, currency: 'ARS', source: this.nombre };
+        return { ticker, price: 20620, currency: 'ARS', source: 'Proveedor de prueba' };
       },
       async getHistory(ticker) {
-        return { ticker, data: historicoSPY, source: this.nombre };
+        return { ticker, data: historicoSPY, source: 'Proveedor de prueba' };
       }
-    };
+    });
 
     const proveedorEl = document.getElementById('proveedor');
     const detalleEl = document.getElementById('detalle');
@@ -46,15 +46,16 @@
       const history = await proveedorPrueba.getHistory('SPY');
       const rsi = window.Cartera20MarketData.calcularRSI(history.data);
 
-      const ok = quote.price === 20620
+      const ok = proveedorPrueba.name === 'Proveedor de prueba'
+        && quote.price === 20620
         && history.data.length === 2
         && rsi.status === 'insufficient-data';
 
       proveedorEl.textContent = ok ? 'OK' : 'ERROR';
       proveedorEl.className = `value ${ok ? 'ok' : ''}`;
       detalleEl.textContent = ok
-        ? `Proveedor: ${quote.source} · SPY: $${quote.price.toLocaleString('es-AR')} · histórico recibido: ${history.data.length} cierres.`
-        : 'La interfaz de prueba no respondió como se esperaba.';
+        ? `Interfaz validada · SPY: $${quote.price.toLocaleString('es-AR')} · histórico recibido: ${history.data.length} cierres.`
+        : 'La interfaz de proveedor no respondió como se esperaba.';
     }
 
     probar();
