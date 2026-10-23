@@ -13,7 +13,7 @@
 <body>
   <main class="app-shell">
     <header class="topbar"><div><p class="eyebrow">CARTERA</p><h1>Mis <span>activos</span></h1><p class="tagline">La estrategia primero. El mercado después.</p></div><a class="icon-button back-button" href="index.html" aria-label="Volver al inicio" title="Volver al inicio">←</a></header>
-    <section class="portfolio-summary"><div><p class="section-label">VALOR DE CARTERA</p><div id="portfolio-total" class="portfolio-total">Cargando…</div><p class="hero-subtitle">Valor de mercado · Google Sheets / Google Finance</p><div id="portfolio-performance" class="portfolio-performance positive"><span>Rendimiento total</span><strong>Calculando…</strong></div></div><div class="portfolio-mini-stat"><span>Activos</span><strong id="asset-count">5</strong></div></section>
+    <section class="portfolio-summary"><div><p class="section-label">VALOR DE CARTERA</p><div id="portfolio-total" class="portfolio-total">Cargando…</div><p class="hero-subtitle">Valor de mercado + liquidez · Punto de inicio 31/10/2026</p><div id="portfolio-performance" class="portfolio-performance positive"><span>Rendimiento de inversiones</span><strong>Calculando…</strong></div></div><div class="portfolio-mini-stat"><span>Liquidez</span><strong id="portfolio-cash">$—</strong></div></section>
     <section class="panel"><div class="panel-heading"><div><p class="section-label">DISTRIBUCIÓN</p><h2>Posición actual</h2></div><span id="data-status" class="status neutral">Consultando datos…</span></div><div id="portfolio-list" class="portfolio-list"></div></section>
     <footer><p>CARTERA 20 · Construir el hábito, no predecir el mercado.</p></footer>
   </main>
@@ -23,6 +23,9 @@
 (() => {
   const SHEET_ID = '1oVR-CTWE5VmIoy1ly_fJrcrT6ZgtJLllUQBp6iGarv4';
   const CCL = 1523.74;
+  const INITIAL_LIQUIDITY_ARS = 2902.31;
+  const INITIAL_DIVIDENDS_USD = 1.15;
+  const INITIAL_DATE = '31/10/2026';
   const assets = [
     {ticker:'SPY',name:'SPDR S&P 500 ETF',target:60,lower:55,upper:65,units:23,ppc:18479.35},
     {ticker:'BRKB',name:'Berkshire Hathaway',target:15,lower:12,upper:18,units:3,ppc:32880.00},
@@ -40,22 +43,23 @@
       const quotes = await Promise.all(assets.map(async a => ({...a, quote:await proveedor.getQuote(a.ticker)})));
       const valid = quotes.filter(a => Number.isFinite(a.quote.price) && a.quote.price > 0);
       if (!valid.length) throw new Error('No se recibieron precios válidos.');
-      const total = valid.reduce((sum,a) => sum + a.units * a.quote.price, 0);
+      const totalInvestments = valid.reduce((sum,a) => sum + a.units * a.quote.price, 0);
       const totalCost = valid.reduce((sum,a) => sum + a.units * a.ppc, 0);
-      const totalPerformance = totalCost ? ((total / totalCost) - 1) * 100 : 0;
+      const totalPortfolio = totalInvestments + INITIAL_LIQUIDITY_ARS;
+      const totalPerformance = totalCost ? ((totalInvestments / totalCost) - 1) * 100 : 0;
       const portfolioData = quotes.map(a => {
         const marketValue = a.quote.price * a.units;
         const cost = a.ppc * a.units;
         const performance = cost ? ((marketValue / cost) - 1) * 100 : 0;
-        return {...a,marketValue,cost,performance,weight:total ? marketValue / total * 100 : 0};
+        return {...a,marketValue,cost,performance,weight:totalInvestments ? marketValue / totalInvestments * 100 : 0};
       });
 
-      document.getElementById('portfolio-total').textContent = `USD ${money(total / CCL)}`;
-      document.getElementById('asset-count').textContent = assets.length;
+      document.getElementById('portfolio-total').textContent = `USD ${money(totalPortfolio / CCL)}`;
+      document.getElementById('portfolio-cash').textContent = `$${money(INITIAL_LIQUIDITY_ARS)}`;
       const perf = document.getElementById('portfolio-performance');
       perf.className = `portfolio-performance ${totalPerformance >= 0 ? 'positive' : 'negative'}`;
-      perf.innerHTML = `<span>Rendimiento total</span><strong>${totalPerformance >= 0 ? '+' : ''}${pct(totalPerformance)}</strong>`;
-      status.textContent = valid.length === assets.length ? 'Datos en vivo · 5/5' : `Datos parciales · ${valid.length}/${assets.length}`;
+      perf.innerHTML = `<span>Rendimiento de inversiones</span><strong>${totalPerformance >= 0 ? '+' : ''}${pct(totalPerformance)}</strong>`;
+      status.textContent = valid.length === assets.length ? `Datos en vivo · 5/5 · Inicio ${INITIAL_DATE}` : `Datos parciales · ${valid.length}/${assets.length}`;
 
       document.getElementById('portfolio-list').innerHTML = portfolioData.map(a => {
         const inBand = a.weight >= a.lower && a.weight <= a.upper;
