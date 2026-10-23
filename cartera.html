@@ -1,83 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0a1320">
-  <title>CARTERA 20 · Cartera</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    .asset-performance{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:16px 0 18px}.asset-performance span{color:#dbe4f2;font-size:.92rem}.asset-performance strong{font-size:1rem;letter-spacing:-.02em}.asset-band-label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:7px;color:#91a0b5;font-size:.66rem}.asset-band-label strong{color:#a9b9ce;font-weight:650}.asset-progress{display:block}.asset-progress-track{width:100%}.asset-progress>span{display:block;margin-top:7px;color:#91a0b5;font-size:.67rem;white-space:normal;line-height:1.35}.asset-status.in-band{background:#153b31;color:#8de0b4}.asset-status.out-band{background:#342a23;color:#e5b98a}.portfolio-performance.positive strong,.asset-performance.positive strong{color:#71d6a0}.portfolio-performance.negative strong,.asset-performance.negative strong{color:#ff8f8f}@media(max-width:480px){.asset-performance{margin-top:15px;margin-bottom:19px}.asset-band-label{font-size:.62rem}.asset-progress>span{font-size:.62rem}}
-  </style>
-</head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0a1320"><title>CARTERA 20 · Cartera</title><link rel="stylesheet" href="style.css">
+<style>
+.asset-performance{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:16px 0 18px}.asset-performance span{color:#dbe4f2;font-size:.92rem}.asset-performance strong{font-size:1rem;letter-spacing:-.02em}.asset-band-label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:7px;color:#91a0b5;font-size:.66rem}.asset-band-label strong{color:#a9b9ce;font-weight:650}.asset-progress>span{display:block;margin-top:7px;color:#91a0b5;font-size:.67rem;white-space:normal;line-height:1.35}.asset-status.in-band{background:#153b31;color:#8de0b4}.asset-status.out-band{background:#342a23;color:#e5b98a}.portfolio-performance.positive strong,.asset-performance.positive strong{color:#71d6a0}.portfolio-performance.negative strong,.asset-performance.negative strong{color:#ff8f8f}.cash-negative{color:#ff8f8f!important}.cash-positive{color:#71d6a0!important}
+</style></head>
 <body>
-  <main class="app-shell">
-    <header class="topbar"><div><p class="eyebrow">CARTERA</p><h1>Mis <span>activos</span></h1><p class="tagline">La estrategia primero. El mercado después.</p></div><a class="icon-button back-button" href="index.html" aria-label="Volver al inicio" title="Volver al inicio">←</a></header>
-    <section class="portfolio-summary"><div><p class="section-label">VALOR DE CARTERA</p><div id="portfolio-total" class="portfolio-total">Cargando…</div><p class="hero-subtitle">Valor de mercado + liquidez · Punto de inicio 31/10/2026</p><div id="portfolio-performance" class="portfolio-performance positive"><span>Rendimiento de inversiones</span><strong>Calculando…</strong></div></div><div class="portfolio-mini-stat"><span>Liquidez</span><strong id="portfolio-cash">$—</strong></div></section>
-    <section class="panel"><div class="panel-heading"><div><p class="section-label">DISTRIBUCIÓN</p><h2>Posición actual</h2></div><span id="data-status" class="status neutral">Consultando datos…</span></div><div id="portfolio-list" class="portfolio-list"></div></section>
-    <footer><p>CARTERA 20 · Construir el hábito, no predecir el mercado.</p></footer>
-  </main>
-  <nav class="bottom-nav" aria-label="Navegación principal"><a class="nav-item" href="index.html"><span class="nav-icon">⌂</span><span>Inicio</span></a><a class="nav-item active" href="cartera.html"><span class="nav-icon">◔</span><span>Cartera</span></a><a class="nav-item" href="aportes.html"><span class="nav-icon">▱</span><span>Aportes</span></a><a class="nav-item" href="decision.html"><span class="nav-icon">◎</span><span>Decisión</span></a><a class="nav-item" href="#"><span class="nav-icon">•••</span><span>Más</span></a></nav>
-<script src="market-data.js"></script>
+<main class="app-shell"><header class="topbar"><div><p class="eyebrow">CARTERA</p><h1>Mis <span>activos</span></h1><p class="tagline">La estrategia primero. El mercado después.</p></div><a class="icon-button back-button" href="index.html" aria-label="Volver al inicio">←</a></header>
+<section class="portfolio-summary"><div><p class="section-label">VALOR DE CARTERA</p><div id="portfolio-total" class="portfolio-total">Cargando…</div><p class="hero-subtitle">Valor de mercado + liquidez · Punto de inicio 31/10/2026</p><div id="portfolio-performance" class="portfolio-performance positive"><span>Rendimiento de inversiones</span><strong>Calculando…</strong></div></div><div class="portfolio-mini-stat"><span>Liquidez</span><strong id="portfolio-cash">$—</strong></div></section>
+<section class="panel"><div class="panel-heading"><div><p class="section-label">DISTRIBUCIÓN</p><h2>Posición actual</h2></div><span id="data-status" class="status neutral">Consultando datos…</span></div><div id="portfolio-list" class="portfolio-list"></div></section>
+<footer><p>CARTERA 20 · Construir el hábito, no predecir el mercado.</p></footer></main>
+<nav class="bottom-nav"><a class="nav-item" href="index.html"><span class="nav-icon">⌂</span><span>Inicio</span></a><a class="nav-item active" href="cartera.html"><span class="nav-icon">◔</span><span>Cartera</span></a><a class="nav-item" href="aportes.html"><span class="nav-icon">▱</span><span>Aportes</span></a><a class="nav-item" href="compras.html"><span class="nav-icon">▤</span><span>Compras</span></a><a class="nav-item" href="decision.html"><span class="nav-icon">◎</span><span>Decisión</span></a></nav>
+<script src="market-data.js"></script><script src="compras-data.js"></script>
 <script>
-(() => {
-  const SHEET_ID = '1oVR-CTWE5VmIoy1ly_fJrcrT6ZgtJLllUQBp6iGarv4';
-  const CCL = 1523.74;
-  const INITIAL_LIQUIDITY_ARS = 2902.31;
-  const INITIAL_DIVIDENDS_USD = 1.15;
-  const INITIAL_DATE = '31/10/2026';
-  const assets = [
-    {ticker:'SPY',name:'SPDR S&P 500 ETF',target:60,lower:55,upper:65,units:23,ppc:18479.35},
-    {ticker:'BRKB',name:'Berkshire Hathaway',target:15,lower:12,upper:18,units:3,ppc:32880.00},
-    {ticker:'VEA',name:'Vanguard FTSE Developed Markets',target:10,lower:8,upper:12,units:8,ppc:10698.75},
-    {ticker:'O',name:'Realty Income',target:10,lower:8,upper:12,units:11,ppc:7053.18},
-    {ticker:'SMH',name:'VanEck Semiconductor ETF',target:5,lower:3,upper:7,units:3,ppc:15948.89}
-  ];
-  const money = value => new Intl.NumberFormat('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(value);
-  const pct = value => `${value.toFixed(2).replace('.',',')}%`;
-  const proveedor = Cartera20MarketData.crearProveedorGoogleSheets({spreadsheetId:SHEET_ID,sheetByTicker:{SPY:'SPY',BRKB:'BRKB',VEA:'VEA',O:'O',SMH:'SMH'}});
-
-  async function cargar() {
-    const status = document.getElementById('data-status');
-    try {
-      const quotes = await Promise.all(assets.map(async a => ({...a, quote:await proveedor.getQuote(a.ticker)})));
-      const valid = quotes.filter(a => Number.isFinite(a.quote.price) && a.quote.price > 0);
-      if (!valid.length) throw new Error('No se recibieron precios válidos.');
-      const totalInvestments = valid.reduce((sum,a) => sum + a.units * a.quote.price, 0);
-      const totalCost = valid.reduce((sum,a) => sum + a.units * a.ppc, 0);
-      const totalPortfolio = totalInvestments + INITIAL_LIQUIDITY_ARS;
-      const totalPerformance = totalCost ? ((totalInvestments / totalCost) - 1) * 100 : 0;
-      const portfolioData = quotes.map(a => {
-        const marketValue = a.quote.price * a.units;
-        const cost = a.ppc * a.units;
-        const performance = cost ? ((marketValue / cost) - 1) * 100 : 0;
-        return {...a,marketValue,cost,performance,weight:totalInvestments ? marketValue / totalInvestments * 100 : 0};
-      });
-
-      document.getElementById('portfolio-total').textContent = `USD ${money(totalPortfolio / CCL)}`;
-      document.getElementById('portfolio-cash').textContent = `$${money(INITIAL_LIQUIDITY_ARS)}`;
-      const perf = document.getElementById('portfolio-performance');
-      perf.className = `portfolio-performance ${totalPerformance >= 0 ? 'positive' : 'negative'}`;
-      perf.innerHTML = `<span>Rendimiento de inversiones</span><strong>${totalPerformance >= 0 ? '+' : ''}${pct(totalPerformance)}</strong>`;
-      status.textContent = valid.length === assets.length ? `Datos en vivo · 5/5 · Inicio ${INITIAL_DATE}` : `Datos parciales · ${valid.length}/${assets.length}`;
-
-      document.getElementById('portfolio-list').innerHTML = portfolioData.map(a => {
-        const inBand = a.weight >= a.lower && a.weight <= a.upper;
-        const bandPosition = Math.min((a.weight / a.upper) * 100, 100);
-        let statusText = 'En banda';
-        if (a.weight > a.upper) statusText = `Supera ${a.upper}%`;
-        if (a.weight < a.lower) statusText = `Debajo de ${a.lower}%`;
-        const hasPrice = Number.isFinite(a.quote.price) && a.quote.price > 0;
-        return `<article class="asset-card"><div class="asset-head"><div class="ticker-badge">${a.ticker}</div><div class="asset-title"><strong>${a.name}</strong><span>Objetivo ${a.target}% · banda ${a.lower}–${a.upper}%</span></div><span class="asset-status ${inBand ? 'in-band' : 'out-band'}">${statusText}</span></div><div class="asset-metrics"><div><span>Unidades</span><strong>${a.units}</strong></div><div><span>PPC</span><strong>$${money(a.ppc)}</strong></div><div><span>Actual</span><strong>${hasPrice ? '$'+money(a.quote.price) : '—'}</strong></div><div><span>Peso</span><strong>${pct(a.weight)}</strong></div></div><div class="asset-performance ${a.performance >= 0 ? 'positive' : 'negative'}"><span>Rendimiento</span><strong>${hasPrice ? (a.performance >= 0 ? '+' : '')+pct(a.performance) : 'Sin datos'}</strong></div><div class="asset-progress"><div class="asset-band-label"><span>Posición en la banda</span><strong>Límite superior ${a.upper}%</strong></div><div class="asset-progress-track"><div class="asset-progress-fill" style="width:${bandPosition}%"></div></div><span>Peso actual ${pct(a.weight)} · objetivo ${a.target}%</span></div></article>`;
-      }).join('');
-    } catch (error) {
-      status.textContent = 'Error al consultar datos';
-      document.getElementById('portfolio-total').textContent = 'Sin datos';
-      document.getElementById('portfolio-list').innerHTML = `<div class="status err">${error.message}</div>`;
-    }
-  }
-  cargar();
+(()=>{
+const SHEET_ID='1oVR-CTWE5VmIoy1ly_fJrcrT6ZgtJLllUQBp6iGarv4',CCL=1523.74,INITIAL_CASH_ARS=1116.62,INITIAL_DIVIDENDS_USD=1.15,INITIAL_DATE='31/10/2026';
+const assets=[{ticker:'SPY',name:'SPDR S&P 500 ETF',target:60,lower:55,upper:65,units:23,ppc:18479.35},{ticker:'BRKB',name:'Berkshire Hathaway',target:15,lower:12,upper:18,units:3,ppc:32880},{ticker:'VEA',name:'Vanguard FTSE Developed Markets',target:10,lower:8,upper:12,units:8,ppc:10698.75},{ticker:'O',name:'Realty Income',target:10,lower:8,upper:12,units:11,ppc:7053.18},{ticker:'SMH',name:'VanEck Semiconductor ETF',target:5,lower:3,upper:7,units:3,ppc:15948.89}];
+const money=v=>new Intl.NumberFormat('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(v),pct=v=>`${v.toFixed(2).replace('.',',')}%`;const proveedor=Cartera20MarketData.crearProveedorGoogleSheets({spreadsheetId:SHEET_ID,sheetByTicker:{SPY:'SPY',BRKB:'BRKB',VEA:'VEA',O:'O',SMH:'SMH'}});
+async function cargar(){const [quotes,compras]=await Promise.all([Promise.all(assets.map(async a=>({...a,quote:await proveedor.getQuote(a.ticker)}))),Cartera20Compras.load()]);const state=Cartera20Compras.applyToAssets(assets,compras);const rows=quotes.map((q,i)=>({...state[i],quote:q.quote})),valid=rows.filter(a=>Number.isFinite(a.quote.price)&&a.quote.price>0);if(!valid.length)throw Error('No se recibieron precios válidos.');const totalInvestments=valid.reduce((s,a)=>s+a.units*a.quote.price,0),totalCost=valid.reduce((s,a)=>s+a.costARS,0),movementARS=compras.reduce((s,x)=>s+x.cash,0),liquidityARS=INITIAL_CASH_ARS+movementARS+INITIAL_DIVIDENDS_USD*CCL/CCL,liquidityUSD=liquidityARS/CCL,totalPortfolio=totalInvestments/CCL+liquidityUSD,totalPerformance=totalCost?((totalInvestments/totalCost)-1)*100:0;document.getElementById('portfolio-total').textContent=`USD ${money(totalPortfolio)}`;document.getElementById('portfolio-cash').textContent=`USD ${money(liquidityUSD)}`;document.getElementById('portfolio-cash').classList.toggle('cash-negative',liquidityUSD<0);document.getElementById('portfolio-cash').classList.toggle('cash-positive',liquidityUSD>=0);const perf=document.getElementById('portfolio-performance');perf.className=`portfolio-performance ${totalPerformance>=0?'positive':'negative'}`;perf.innerHTML=`<span>Rendimiento de inversiones</span><strong>${totalPerformance>=0?'+':''}${pct(totalPerformance)}</strong>`;document.getElementById('data-status').textContent=`Datos en vivo · 5/5 · ${compras.length} operación(es)`;document.getElementById('portfolio-list').innerHTML=rows.map(a=>{const marketValue=a.units*a.quote.price,cost=a.costARS,performance=cost?((marketValue/cost)-1)*100:0,weight=totalInvestments?marketValue/totalInvestments*100:0,inBand=weight>=a.lower&&weight<=a.upper,bandPosition=Math.min((weight/a.upper)*100,100),hasPrice=Number.isFinite(a.quote.price)&&a.quote.price>0,statusText=weight>a.upper?`Supera ${a.upper}%`:weight<a.lower?`Debajo de ${a.lower}%`:'En banda';return `<article class="asset-card"><div class="asset-head"><div class="ticker-badge">${a.ticker}</div><div class="asset-title"><strong>${a.name}</strong><span>Objetivo ${a.target}% · banda ${a.lower}–${a.upper}%</span></div><span class="asset-status ${inBand?'in-band':'out-band'}">${statusText}</span></div><div class="asset-metrics"><div><span>Unidades</span><strong>${a.units}</strong></div><div><span>PPC</span><strong>$${money(a.ppc)}</strong></div><div><span>Actual</span><strong>${hasPrice?'$'+money(a.quote.price):'—'}</strong></div><div><span>Peso</span><strong>${pct(weight)}</strong></div></div><div class="asset-performance ${performance>=0?'positive':'negative'}"><span>Rendimiento</span><strong>${hasPrice?(performance>=0?'+':'')+pct(performance):'Sin datos'}</strong></div><div class="asset-progress"><div class="asset-band-label"><span>Posición en la banda</span><strong>Límite superior ${a.upper}%</strong></div><div class="asset-progress-track"><div class="asset-progress-fill" style="width:${bandPosition}%"></div></div><span>Peso actual ${pct(weight)} · objetivo ${a.target}% · ${compras.filter(x=>x.ticker===a.ticker).length} operación(es)</span></div></article>`}).join('')}
+cargar().catch(e=>{document.getElementById('data-status').textContent='Error al consultar datos';document.getElementById('portfolio-total').textContent='Sin datos';document.getElementById('portfolio-list').innerHTML=`<div class="status err">${e.message}</div>`});
 })();
-</script>
-</body>
-</html>
+</script></body></html>
