@@ -1,112 +1,31 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0d1726">
-  <title>CARTERA 20</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    .evolution-panel{overflow:hidden}.evolution-controls{display:flex;gap:7px;margin:-4px 0 18px;overflow-x:auto;scrollbar-width:none}.evolution-controls::-webkit-scrollbar{display:none}.evolution-controls button{border:1px solid #263d5a;background:#142338;color:#8495ad;border-radius:9px;padding:7px 11px;font-size:.72rem;font-weight:750;cursor:pointer;white-space:nowrap}.evolution-controls button.active{background:#1b3559;border-color:#41689c;color:#e8efff}.chart-wrap{width:100%;overflow:hidden;border:1px solid #203550;border-radius:15px;background:#0d1928;padding:10px 8px 4px}.evolution-chart{display:block;width:100%;height:auto;min-height:190px}.chart-grid{stroke:#1b2d43;stroke-width:1}.portfolio-line{fill:none;stroke:#71d6a0;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}.portfolio-point{fill:#71d6a0}.chart-legend{display:flex;flex-wrap:wrap;gap:15px;margin:13px 2px 0;color:#9aa8bb;font-size:.7rem;font-weight:700}.chart-legend span{display:flex;align-items:center;gap:6px}.legend-dot{width:8px;height:8px;display:inline-block;border-radius:50%}.portfolio-dot{background:#71d6a0}.chart-note{margin:11px 2px 0;color:#718096;font-size:.7rem;line-height:1.45}.live-positive{color:#71d6a0!important}.live-negative{color:#ff8f8f!important}.live-neutral{color:#91a0b5!important}.live-status{white-space:nowrap}@media(max-width:480px){.evolution-chart{min-height:165px}.chart-legend{gap:10px}}
-  </style>
-</head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0d1726"><title>CARTERA 20</title><link rel="stylesheet" href="style.css">
+<style>
+.evolution-panel{overflow:hidden}.evolution-controls{display:flex;gap:7px;margin:-4px 0 18px;overflow-x:auto;scrollbar-width:none}.evolution-controls::-webkit-scrollbar{display:none}.evolution-controls button{border:1px solid #263d5a;background:#142338;color:#8495ad;border-radius:9px;padding:7px 11px;font-size:.72rem;font-weight:750;cursor:pointer;white-space:nowrap}.evolution-controls button.active{background:#1b3559;border-color:#41689c;color:#e8efff}.chart-wrap{width:100%;overflow:hidden;border:1px solid #203550;border-radius:15px;background:#0d1928;padding:10px 8px 4px}.evolution-chart{display:block;width:100%;height:auto;min-height:190px}.chart-grid{stroke:#1b2d43;stroke-width:1}.portfolio-line{fill:none;stroke:#71d6a0;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}.portfolio-point{fill:#71d6a0}.chart-legend{display:flex;flex-wrap:wrap;gap:15px;margin:13px 2px 0;color:#9aa8bb;font-size:.7rem;font-weight:700}.chart-legend span{display:flex;align-items:center;gap:6px}.legend-dot{width:8px;height:8px;display:inline-block;border-radius:50%}.portfolio-dot{background:#71d6a0}.chart-note{margin:11px 2px 0;color:#718096;font-size:.7rem;line-height:1.45}.live-positive{color:#71d6a0!important}.live-negative{color:#ff8f8f!important}.live-neutral{color:#91a0b5!important}.live-status{white-space:nowrap}
+</style></head>
 <body>
-  <main class="app-shell">
-    <header class="topbar"><div><p class="eyebrow">PROYECTO DE INVERSIÓN</p><h1>CARTERA <span>20</span></h1><p class="tagline">Una pequeña cartera. Una gran disciplina. 20 años.</p></div><button class="icon-button" aria-label="Configuración" title="Configuración"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.4a3.6 3.6 0 1 0 0 7.2 3.6 3.6 0 0 0 0-7.2Z"/><path d="m19.4 13.2 1.3 1-.1 1.1-1.6 2.1-1.1-.2-1.2-.9a8 8 0 0 1-1.5.9l-.2 1.5-.9.7h-2.6l-.9-.7-.2-1.5a8 8 0 0 1-1.5-.9l-1.2.9-1.2.9-1.1.2-1.6-2.1-.1-1.1 1.3-1a8 8 0 0 1 0-2.4l-1.3-1 .1-1.1 1.6-2.1 1.1.2 1.2.9a8 8 0 0 1 1.5-.9l.2-1.5.9-.7h2.6l.9.7.2 1.5a8 8 0 0 1 1.5.9l1.2-.9 1.1-.2 1.6 2.1.1 1.1-1.3 1a8 8 0 0 1 0 2.4Z"/></svg></button></header>
-    <section class="hero-card"><div><p class="section-label">VALOR CARTERA</p><div id="hero-total" class="hero-value">Cargando…</div><p class="hero-subtitle">Inversiones + liquidez · Punto de inicio 31/10/2026</p><div style="display:flex;align-items:baseline;gap:9px;margin-top:14px;"><span style="color:#a8b5c8;font-size:.72rem;text-transform:uppercase;letter-spacing:.09em;font-weight:750;">Rendimiento inversiones</span><strong id="hero-performance" class="live-neutral" style="font-size:1.18rem;letter-spacing:-.02em;">Calculando…</strong></div></div><div class="hero-chart-placeholder" aria-hidden="true"></div></section>
-    <section class="stats-grid"><article class="stat-card"><div class="stat-icon">▤</div><div><span>Costo</span><strong id="stat-cost">—</strong><small>PPC de las posiciones</small></div></article><article class="stat-card"><div class="stat-icon">▥</div><div><span>Invertido</span><strong id="stat-invested">—</strong><small>Valor de mercado</small></div></article><article class="stat-card highlight"><div class="stat-icon">▱</div><div><span>Liquidez</span><strong id="stat-cash">—</strong><small id="stat-cash-detail">ARS + dividendos USD</small></div></article><article class="stat-card"><div class="stat-icon">↗</div><div><span>Rendimiento</span><strong id="stat-performance" class="live-neutral">—</strong><small>Sobre las inversiones</small></div></article></section>
-    <section class="panel evolution-panel"><div class="panel-heading"><div><p class="section-label">EVOLUCIÓN</p><h2>El camino de la cartera</h2></div><span id="evolution-status" class="status neutral live-status">Punto inicial</span></div><div class="evolution-controls" aria-label="Período del gráfico"><button type="button" class="active">Desde inicio</button><button type="button">1 año</button><button type="button">5 años</button><button type="button">20 años</button></div><div class="chart-wrap"><svg class="evolution-chart" viewBox="0 0 800 300" role="img" aria-label="Evolución real de CARTERA 20 desde el 31 de octubre de 2026"><line x1="55" y1="45" x2="770" y2="45" class="chart-grid"/><line x1="55" y1="110" x2="770" y2="110" class="chart-grid"/><line x1="55" y1="175" x2="770" y2="175" class="chart-grid"/><line x1="55" y1="240" x2="770" y2="240" class="chart-grid"/><polyline id="portfolio-evolution-line" points="55,175" class="portfolio-line"/><circle id="portfolio-evolution-point" cx="55" cy="175" r="5" class="portfolio-point"/></svg></div><div class="chart-legend"><span><i class="legend-dot portfolio-dot"></i>CARTERA 20</span></div><p class="chart-note">El gráfico comienza con el valor real del broker al 31/10/2026. A medida que registremos aportes y movimientos reales, se agregarán nuevos puntos sin confundir aportes con rendimiento.</p></section>
-    <section class="panel"><div class="panel-heading"><div><p class="section-label">DISTRIBUCIÓN</p><h2>Cartera actual</h2></div><span id="allocation-status" class="status neutral live-status">Consultando datos…</span></div><div id="allocation-list" class="allocation-list"></div></section>
-    <section class="two-column"><article class="panel strategy-card"><p class="section-label">ESTRATEGIA</p><h2>Estado de la cartera</h2><div class="strategy-status"><span class="status-dot"></span><div><strong id="strategy-title">Consultando bandas…</strong><p id="strategy-text">El estado se calcula con los pesos actuales de los cinco activos.</p></div></div></article><article class="panel contribution-card"><p class="section-label">PRÓXIMO APORTE</p><div class="contribution-main"><div class="target-icon">◎</div><div><h2>USD 35,00</h2><p class="muted">Objetivo mensual inicial</p></div></div><div class="progress-track"><div class="progress-fill" style="width:0%"></div></div><small id="contribution-detail">El aporte real se cargará en pesos y se convertirá mediante CCL.</small></article></section>
-    <section class="panel recommendation-card"><div class="panel-heading"><div><p class="section-label">DECISIÓN</p><h2>Recomendación del sistema</h2></div><span class="score-placeholder">— / 100</span></div><div class="empty-recommendation"><div class="decision-icon">◉</div><div><strong>Aún no hay una recomendación</strong><p>El motor de decisión se incorporará después de validar la estructura básica de la cartera.</p></div></div></section><footer><p>CARTERA 20 · Construir el hábito, no predecir el mercado.</p></footer>
-  </main>
-  <nav class="bottom-nav" aria-label="Navegación principal"><a class="nav-item active" href="index.html"><span class="nav-icon">⌂</span><span>Inicio</span></a><a class="nav-item" href="cartera.html"><span class="nav-icon">◔</span><span>Cartera</span></a><a class="nav-item" href="aportes.html"><span class="nav-icon">▱</span><span>Aportes</span></a><a class="nav-item" href="decision.html"><span class="nav-icon">◎</span><span>Decisión</span></a><a class="nav-item" href="decision.html"><span class="nav-icon">•••</span><span>Más</span></a></nav>
-  <script src="market-data.js"></script>
-  <script>
-  (()=>{
-    const SHEET_ID='1oVR-CTWE5VmIoy1ly_fJrcrT6ZgtJLllUQBp6iGarv4';
-    const CCL=1523.74;
-    const INITIAL_CASH_ARS=1116.62;
-    const INITIAL_DIVIDENDS_USD=1.15;
-    const INITIAL_DATE='31/10/2026';
-    const assets=[
-      {ticker:'SPY',target:60,lower:55,upper:65,units:23,ppc:18479.35},
-      {ticker:'BRKB',target:15,lower:12,upper:18,units:3,ppc:32880.00},
-      {ticker:'VEA',target:10,lower:8,upper:12,units:8,ppc:10698.75},
-      {ticker:'O',target:10,lower:8,upper:12,units:11,ppc:7053.18},
-      {ticker:'SMH',target:5,lower:3,upper:7,units:3,ppc:15948.89}
-    ];
-    const money=v=>new Intl.NumberFormat('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(v);
-    const pct=v=>`${v.toFixed(2).replace('.',',')}%`;
-    const provider=Cartera20MarketData.crearProveedorGoogleSheets({spreadsheetId:SHEET_ID,sheetByTicker:{SPY:'SPY',BRKB:'BRKB',VEA:'VEA',O:'O',SMH:'SMH'}});
-    const setPerf=(el,value)=>{el.classList.remove('live-positive','live-negative','live-neutral');el.classList.add(value>=0?'live-positive':'live-negative');el.textContent=`${value>=0?'+':''}${pct(value)}`};
-
-    async function cargarAportes(){
-      const sheet='APORTES';
-      const query=encodeURIComponent('select A, B, C, D where A is not null order by A');
-      const url=`https://docs.google.com/spreadsheets/d/${encodeURIComponent(SHEET_ID)}/gviz/tq?sheet=${encodeURIComponent(sheet)}&tqx=out:json&tq=${query}`;
-      const response=await fetch(url,{cache:'no-store'});
-      if(!response.ok) throw new Error(`No se pudo consultar APORTES (${response.status}).`);
-      const texto=await response.text();
-      const inicio=texto.indexOf('{'), fin=texto.lastIndexOf('}');
-      if(inicio===-1||fin===-1) throw new Error('Respuesta inválida de APORTES.');
-      const payload=JSON.parse(texto.slice(inicio,fin+1));
-      const filas=payload?.table?.rows;
-      if(!Array.isArray(filas)) return {rows:[],totalARS:0,totalUSD:0};
-      const rows=filas.map(f=>{
-        const c=Array.isArray(f?.c)?f.c:[];
-        const fecha=String(c[0]?.f??c[0]?.v??'').trim();
-        const importe=Number(String(c[1]?.v??c[1]?.f??'').replace(',','.'));
-        const tipo=String(c[2]?.v??c[2]?.f??'').trim();
-        const ccl=Number(String(c[3]?.v??c[3]?.f??'').replace(',','.'));
-        return {fecha,importe,tipo,ccl};
-      }).filter(r=>r.fecha&&Number.isFinite(r.importe)&&r.importe>0&&Number.isFinite(r.ccl)&&r.ccl>0);
-      const parseFecha=s=>{const m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);return m?new Date(Number(m[3]),Number(m[2])-1,Number(m[1])):new Date(s)};
-      const inicioDate=parseFecha(INITIAL_DATE);
-      const valid=rows.filter(r=>parseFecha(r.fecha)>inicioDate);
-      return {rows:valid,totalARS:valid.reduce((s,r)=>s+r.importe,0),totalUSD:valid.reduce((s,r)=>s+(r.importe/r.ccl),0)};
-    }
-
-    async function cargar(){
-      const [quotes,aportes]=await Promise.all([
-        Promise.all(assets.map(async a=>({...a,quote:await provider.getQuote(a.ticker)}))),
-        cargarAportes()
-      ]);
-      const valid=quotes.filter(a=>Number.isFinite(a.quote.price)&&a.quote.price>0);
-      if(!valid.length)throw new Error('No se recibieron precios válidos.');
-      const totalInvestments=valid.reduce((s,a)=>s+a.units*a.quote.price,0);
-      const cost=valid.reduce((s,a)=>s+a.units*a.ppc,0);
-      const liquidityUSD=(INITIAL_CASH_ARS/CCL)+INITIAL_DIVIDENDS_USD+aportes.totalUSD;
-      const totalPortfolioUSD=(totalInvestments/CCL)+liquidityUSD;
-      const performance=cost?((totalInvestments/cost)-1)*100:0;
-      document.getElementById('hero-total').textContent=`USD ${money(totalPortfolioUSD)}`;
-      setPerf(document.getElementById('hero-performance'),performance);
-      document.getElementById('stat-cost').textContent=`USD ${money(cost/CCL)}`;
-      document.getElementById('stat-invested').textContent=`USD ${money(totalInvestments/CCL)}`;
-      document.getElementById('stat-cash').textContent=`USD ${money(liquidityUSD)}`;
-      document.getElementById('stat-cash-detail').textContent=`Inicial + aportes · ${aportes.rows.length} aporte(s) desde ${INITIAL_DATE}`;
-      document.getElementById('stat-performance').textContent=`${performance>=0?'+':''}${pct(performance)}`;
-      document.getElementById('stat-performance').classList.add(performance>=0?'live-positive':'live-negative');
-      document.getElementById('contribution-detail').textContent=aportes.rows.length?`Detectados ${aportes.rows.length} aporte(s) desde ${INITIAL_DATE}: ARS ${money(aportes.totalARS)} · USD ${money(aportes.totalUSD)}.`:'El aporte real se cargará en pesos y se convertirá mediante CCL.';
-      const complete=valid.length===assets.length;
-      document.getElementById('allocation-status').textContent=complete?`Datos en vivo · 5/5 · Inicio ${INITIAL_DATE}`:`Datos parciales · ${valid.length}/${assets.length}`;
-      const rows=quotes.map(a=>{const value=a.units*a.quote.price;const weight=totalInvestments?value/totalInvestments*100:0;return {...a,value,weight,inBand:weight>=a.lower&&weight<=a.upper};});
-      document.getElementById('allocation-list').innerHTML=rows.map(a=>`<div class="allocation-row"><div class="asset-name"><strong>${a.ticker}</strong><span>Objetivo ${a.target}% · banda ${a.lower}–${a.upper}%</span></div><div class="allocation-track"><div class="allocation-fill" style="width:${Math.min(a.weight,100)}%"></div></div><strong>${pct(a.weight)}</strong></div>`).join('');
-      const outside=rows.filter(a=>!a.inBand);
-      const strategyTitle=document.getElementById('strategy-title');
-      strategyTitle.textContent=outside.length?'Revisar distribución':'Cartera dentro de bandas';
-      document.getElementById('strategy-text').textContent=outside.length?outside.map(a=>`${a.ticker}: ${a.weight>a.upper?'por encima':'por debajo'} de su banda`).join(' · '):'Los cinco activos se encuentran dentro de sus bandas objetivo.';
-      document.getElementById('evolution-status').textContent=complete?`Punto inicial · ${INITIAL_DATE}`:'Datos parciales';
-    }
-    cargar().catch(error=>{
-      document.getElementById('hero-total').textContent='Sin datos';
-      document.getElementById('hero-performance').textContent='Sin datos';
-      document.getElementById('stat-performance').textContent='Sin datos';
-      document.getElementById('allocation-status').textContent='Error al consultar datos';
-      document.getElementById('strategy-title').textContent='Datos no disponibles';
-      document.getElementById('strategy-text').textContent=error.message;
-    });
-  })();
-  </script>
-</body>
-</html>
+<main class="app-shell">
+<header class="topbar"><div><p class="eyebrow">PROYECTO DE INVERSIÓN</p><h1>CARTERA <span>20</span></h1><p class="tagline">Una pequeña cartera. Una gran disciplina. 20 años.</p></div><button class="icon-button" aria-label="Configuración" title="Configuración"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.4a3.6 3.6 0 1 0 0 7.2 3.6 3.6 0 0 0 0-7.2Z"/><path d="m19.4 13.2 1.3 1-.1 1.1-1.6 2.1-1.1-.2-1.2.9a8 8 0 0 1-1.5.9l-.2 1.5-.9.7h-2.6l-.9-.7-.2-1.5a8 8 0 0 1-1.5-.9l-1.2.9-1.2.9-1.1.2-1.6-2.1-.1-1.1 1.3-1a8 8 0 0 1 0-2.4l-1.3-1 .1-1.1 1.6-2.1 1.1.2 1.2.9a8 8 0 0 1 1.5-.9l.2-1.5.9-.7h2.6l.9.7.2 1.5a8 8 0 0 1 1.5.9l1.2-.9 1.1-.2 1.6 2.1.1 1.1-1.3 1a8 8 0 0 1 0 2.4Z"/></svg></button></header>
+<section class="hero-card"><div><p class="section-label">VALOR CARTERA</p><div id="hero-total" class="hero-value">Cargando…</div><p class="hero-subtitle">Inversiones + liquidez · Punto de inicio 31/10/2026</p><div style="display:flex;align-items:baseline;gap:9px;margin-top:14px;"><span style="color:#a8b5c8;font-size:.72rem;text-transform:uppercase;letter-spacing:.09em;font-weight:750;">Rendimiento inversiones</span><strong id="hero-performance" class="live-neutral" style="font-size:1.18rem;letter-spacing:-.02em;">Calculando…</strong></div></div><div class="hero-chart-placeholder" aria-hidden="true"></div></section>
+<section class="stats-grid"><article class="stat-card"><div class="stat-icon">▤</div><div><span>Costo</span><strong id="stat-cost">—</strong><small>PPC de las posiciones</small></div></article><article class="stat-card"><div class="stat-icon">▥</div><div><span>Invertido</span><strong id="stat-invested">—</strong><small>Valor de mercado</small></div></article><article class="stat-card highlight"><div class="stat-icon">▱</div><div><span>Liquidez</span><strong id="stat-cash">—</strong><small id="stat-cash-detail">ARS + dividendos USD</small></div></article><article class="stat-card"><div class="stat-icon">↗</div><div><span>Rendimiento</span><strong id="stat-performance" class="live-neutral">—</strong><small>Sobre las inversiones</small></div></article></section>
+<section class="panel evolution-panel"><div class="panel-heading"><div><p class="section-label">EVOLUCIÓN</p><h2>El camino de la cartera</h2></div><span id="evolution-status" class="status neutral live-status">Punto inicial</span></div><div class="evolution-controls"><button type="button" class="active">Desde inicio</button><button type="button">1 año</button><button type="button">5 años</button><button type="button">20 años</button></div><div class="chart-wrap"><svg class="evolution-chart" viewBox="0 0 800 300" role="img"><line x1="55" y1="45" x2="770" y2="45" class="chart-grid"/><line x1="55" y1="110" x2="770" y2="110" class="chart-grid"/><line x1="55" y1="175" x2="770" y2="175" class="chart-grid"/><line x1="55" y1="240" x2="770" y2="240" class="chart-grid"/><polyline id="portfolio-evolution-line" points="55,175" class="portfolio-line"/><circle id="portfolio-evolution-point" cx="55" cy="175" r="5" class="portfolio-point"/></svg></div><div class="chart-legend"><span><i class="legend-dot portfolio-dot"></i>CARTERA 20</span></div><p class="chart-note">El gráfico comienza con el valor real del broker al 31/10/2026. A medida que registremos aportes y movimientos reales, se agregarán nuevos puntos sin confundir aportes con rendimiento.</p></section>
+<section class="panel"><div class="panel-heading"><div><p class="section-label">DISTRIBUCIÓN</p><h2>Cartera actual</h2></div><span id="allocation-status" class="status neutral live-status">Consultando datos…</span></div><div id="allocation-list" class="allocation-list"></div></section>
+<section class="two-column"><article class="panel strategy-card"><p class="section-label">ESTRATEGIA</p><h2>Estado de la cartera</h2><div class="strategy-status"><span class="status-dot"></span><div><strong id="strategy-title">Consultando bandas…</strong><p id="strategy-text">El estado se calcula con los pesos actuales de los cinco activos.</p></div></div></article><article class="panel contribution-card"><p class="section-label">PRÓXIMO APORTE</p><div class="contribution-main"><div class="target-icon">◎</div><div><h2>USD 35,00</h2><p class="muted">Objetivo mensual inicial</p></div></div><div class="progress-track"><div class="progress-fill" style="width:0%"></div></div><small id="contribution-detail">El aporte real se cargará en pesos y se convertirá mediante CCL.</small></article></section>
+<section class="panel recommendation-card"><div class="panel-heading"><div><p class="section-label">DECISIÓN</p><h2>Recomendación del sistema</h2></div><span class="score-placeholder">— / 100</span></div><div class="empty-recommendation"><div class="decision-icon">◉</div><div><strong>Aún no hay una recomendación</strong><p>El motor de decisión se incorporará después de validar la estructura básica de la cartera.</p></div></div></section><footer><p>CARTERA 20 · Construir el hábito, no predecir el mercado.</p></footer>
+</main>
+<nav class="bottom-nav"><a class="nav-item active" href="index.html"><span class="nav-icon">⌂</span><span>Inicio</span></a><a class="nav-item" href="cartera.html"><span class="nav-icon">◔</span><span>Cartera</span></a><a class="nav-item" href="aportes.html"><span class="nav-icon">▱</span><span>Aportes</span></a><a class="nav-item" href="compras.html"><span class="nav-icon">▤</span><span>Compras</span></a><a class="nav-item" href="decision.html"><span class="nav-icon">◎</span><span>Decisión</span></a></nav>
+<script src="market-data.js"></script><script src="compras-data.js"></script>
+<script>
+(()=>{
+const SHEET_ID='1oVR-CTWE5VmIoy1ly_fJrcrT6ZgtJLllUQBp6iGarv4',CCL=1523.74,INITIAL_CASH_ARS=1116.62,INITIAL_DIVIDENDS_USD=1.15,INITIAL_DATE='31/10/2026';
+const assets=[{ticker:'SPY',target:60,lower:55,upper:65,units:23,ppc:18479.35},{ticker:'BRKB',target:15,lower:12,upper:18,units:3,ppc:32880},{ticker:'VEA',target:10,lower:8,upper:12,units:8,ppc:10698.75},{ticker:'O',target:10,lower:8,upper:12,units:11,ppc:7053.18},{ticker:'SMH',target:5,lower:3,upper:7,units:3,ppc:15948.89}];
+const money=v=>new Intl.NumberFormat('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(v),pct=v=>`${v.toFixed(2).replace('.',',')}%`;const provider=Cartera20MarketData.crearProveedorGoogleSheets({spreadsheetId:SHEET_ID,sheetByTicker:{SPY:'SPY',BRKB:'BRKB',VEA:'VEA',O:'O',SMH:'SMH'}});const setPerf=(el,v)=>{el.classList.remove('live-positive','live-negative','live-neutral');el.classList.add(v>=0?'live-positive':'live-negative');el.textContent=`${v>=0?'+':''}${pct(v)}`};
+async function cargarAportes(){const q=encodeURIComponent('select A, B, C, D where A is not null order by A'),u=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?sheet=APORTES&tqx=out:json&tq=${q}`,r=await fetch(u,{cache:'no-store'});if(!r.ok)throw Error(`No se pudo consultar APORTES (${r.status}).`);const t=await r.text(),i=t.indexOf('{'),j=t.lastIndexOf('}'),rows=JSON.parse(t.slice(i,j+1))?.table?.rows||[];const date=s=>{const m=String(s).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);return m?new Date(+m[3],+m[2]-1,+m[1]):new Date(s)},start=new Date(2026,9,31);return rows.map(f=>{const c=f.c||[];return{d:date(c[0]?.f??c[0]?.v),ars:Number(c[1]?.v??c[1]?.f),ccl:Number(c[3]?.v??c[3]?.f)}}).filter(x=>x.d&&x.d>start&&x.ars>0&&x.ccl>0)}
+async function cargar(){const [quotes,aportes,compras]=await Promise.all([Promise.all(assets.map(async a=>({...a,quote:await provider.getQuote(a.ticker)}))),cargarAportes(),Cartera20Compras.load()]);const state=Cartera20Compras.applyToAssets(assets,compras);const rows=quotes.map((q,i)=>({...state[i],quote:q.quote}));const valid=rows.filter(a=>Number.isFinite(a.quote.price)&&a.quote.price>0);if(!valid.length)throw Error('No se recibieron precios válidos.');const totalInvestments=valid.reduce((s,a)=>s+a.units*a.quote.price,0),cost=valid.reduce((s,a)=>s+a.costARS,0),aportesUSD=aportes.reduce((s,a)=>s+a.ars/a.ccl,0),movimientosUSD=compras.reduce((s,x)=>s+x.cash/x.ccl,0),liquidityUSD=INITIAL_CASH_ARS/CCL+INITIAL_DIVIDENDS_USD+aportesUSD+movimientosUSD,totalPortfolioUSD=totalInvestments/CCL+liquidityUSD,performance=cost?((totalInvestments/cost)-1)*100:0;
+document.getElementById('hero-total').textContent=`USD ${money(totalPortfolioUSD)}`;setPerf(document.getElementById('hero-performance'),performance);document.getElementById('stat-cost').textContent=`USD ${money(cost/CCL)}`;document.getElementById('stat-invested').textContent=`USD ${money(totalInvestments/CCL)}`;const cash=document.getElementById('stat-cash');cash.textContent=`USD ${money(liquidityUSD)}`;cash.classList.toggle('live-negative',liquidityUSD<0);cash.classList.toggle('live-positive',liquidityUSD>=0);document.getElementById('stat-cash-detail').textContent=`Inicial + aportes + operaciones · ${compras.length} operación(es)`;document.getElementById('stat-performance').textContent=`${performance>=0?'+':''}${pct(performance)}`;document.getElementById('stat-performance').classList.add(performance>=0?'live-positive':'live-negative');document.getElementById('contribution-detail').textContent=`Aportes reales: ${aportes.length} · Operaciones reales: ${compras.length} desde ${INITIAL_DATE}.`;document.getElementById('allocation-status').textContent=`Datos en vivo · ${valid.length}/5 · ${compras.length} operación(es)`;
+const alloc=rows.map(a=>{const value=a.units*a.quote.price,weight=totalInvestments?value/totalInvestments*100:0;return{...a,value,weight,inBand:weight>=a.lower&&weight<=a.upper}});document.getElementById('allocation-list').innerHTML=alloc.map(a=>`<div class="allocation-row"><div class="asset-name"><strong>${a.ticker}</strong><span>${a.units} u. · Objetivo ${a.target}% · banda ${a.lower}–${a.upper}%</span></div><div class="allocation-track"><div class="allocation-fill" style="width:${Math.min(a.weight,100)}%"></div></div><strong>${pct(a.weight)}</strong></div>`).join('');const outside=alloc.filter(a=>!a.inBand);document.getElementById('strategy-title').textContent=outside.length?'Revisar distribución':'Cartera dentro de bandas';document.getElementById('strategy-text').textContent=outside.length?outside.map(a=>`${a.ticker}: ${a.weight>a.upper?'por encima':'por debajo'} de su banda`).join(' · '):'Los cinco activos se encuentran dentro de sus bandas objetivo.';document.getElementById('evolution-status').textContent=`${compras.length} operación(es) · Inicio ${INITIAL_DATE}`}
+cargar().catch(e=>{document.getElementById('hero-total').textContent='Sin datos';document.getElementById('hero-performance').textContent='Sin datos';document.getElementById('stat-performance').textContent='Sin datos';document.getElementById('allocation-status').textContent='Error al consultar datos';document.getElementById('strategy-title').textContent='Datos no disponibles';document.getElementById('strategy-text').textContent=e.message});
+})();
+</script></body></html>
